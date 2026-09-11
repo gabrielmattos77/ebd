@@ -7,6 +7,11 @@
 
     <title>Controle da EBD</title>
 
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6b4f35">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <style>
         * {
             box-sizing: border-box;
@@ -1077,6 +1082,20 @@ header h1 {
 </nav>
 
     <main class="container"></main>
+
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/static/service-worker.js")
+            .then(() => {
+                console.log("Service Worker registrado com sucesso.");
+            })
+            .catch(error => {
+                console.error("Erro ao registrar Service Worker:", error);
+            });
+    });
+}
+</script>
 
 </body>
 

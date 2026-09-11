@@ -6,6 +6,7 @@ from banco import (
     cadastrar_aluno,
     listar_classes,
     listar_alunos_por_classe,
+    listar_alunos_por_classe_no_domingo,
     listar_alunos_historico_classe,
     mudar_aluno_de_classe,
     atualizar_aluno,
@@ -30,6 +31,9 @@ from banco import (
 
 app = Flask(__name__)
 
+@app.route("/manifest.json")
+def manifest():
+    return app.send_static_file("manifest.json")
 
 @app.route("/")
 def inicio():
@@ -208,10 +212,20 @@ def chamada():
     domingo_selecionado = None
     classe_selecionada = None
 
-    if classe_id:
+    if domingo_id:
 
-        alunos = listar_alunos_por_classe(
-            int(classe_id)
+        for id_domingo, data, nao_teve_aula in domingos:
+
+            if id_domingo == int(domingo_id):
+
+                domingo_selecionado = data
+                break
+
+    if classe_id and domingo_selecionado:
+
+        alunos = listar_alunos_por_classe_no_domingo(
+            int(classe_id),
+            domingo_selecionado
         )
 
         for aluno in alunos:

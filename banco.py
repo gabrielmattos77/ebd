@@ -307,6 +307,51 @@ def listar_alunos_por_classe(classe_id):
 
     return alunos
 
+def listar_alunos_por_classe_no_domingo(classe_id, data_domingo):
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT
+            alunos.id,
+            alunos.nome,
+            alunos.ativo,
+            alunos.identificacao,
+            matriculas.data_inicio,
+
+            (
+                SELECT historico.motivo_fim
+                FROM matriculas AS historico
+                WHERE historico.aluno_id = alunos.id
+                  AND historico.data_fim IS NOT NULL
+                  AND historico.motivo_fim IS NOT NULL
+                  AND TRIM(historico.motivo_fim) != ''
+                ORDER BY historico.data_fim DESC
+                LIMIT 1
+            ) AS ultimo_motivo
+
+        FROM alunos
+
+        INNER JOIN matriculas
+            ON alunos.id = matriculas.aluno_id
+
+        WHERE matriculas.classe_id = ?
+          AND matriculas.data_inicio <= ?
+          AND (
+              matriculas.data_fim IS NULL
+              OR matriculas.data_fim > ?
+          )
+          AND alunos.ativo = 1
+
+        ORDER BY alunos.nome
+    """, (classe_id, data_domingo, data_domingo))
+
+    alunos = cursor.fetchall()
+
+    conexao.close()
+
+    return alunos
+
 def listar_alunos_historico_classe(classe_id):
 
     conexao = conectar()
