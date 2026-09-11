@@ -1,0 +1,608 @@
+_<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alunos — Controle da EBD</title>
+
+   <style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f6f2;
+    color: #3d2f24;
+}
+
+header {
+    padding: 30px;
+    text-align: center;
+    background: #ffffff;
+    border-bottom: 2px solid #d6c2ad;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    color: #3d2f24;
+}
+
+header p {
+    margin: 0;
+    color: #9ca3af;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.box {
+    background: #ffffff;
+    border: 1px solid #d6c2ad;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.box h2 {
+    margin-top: 0;
+    color: #6b4f35;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #5b4331;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d6c2ad;
+    border-radius: 8px;
+    background: #fdfbf8;
+    color: #3d2f24;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #b08968;
+}
+
+button {
+    margin-top: 20px;
+    padding: 11px 18px;
+    border: 1px solid #b08968;
+    border-radius: 8px;
+    background: #c8ad8d;
+    color: #4e342e;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #b08968;
+    color: white;
+}
+
+.voltar {
+    display: inline-block;
+    margin-bottom: 25px;
+    text-decoration: none;
+    color: #6b4f35;
+    font-weight: bold;
+}
+
+.voltar:hover {
+    text-decoration: underline;
+}
+
+.lista-alunos {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.aluno {
+    background: #f7f3ee;
+    border: 1px solid #d6b38a;
+    border-radius: 10px;
+    padding: 15px 18px;
+    color: #4e342e;
+}
+
+.aluno strong {
+    color: #6b4f35;
+}
+
+/* Espaçamento da seção de alunos cadastrados */
+
+.box + .box {
+    margin-top: 30px;
+}
+
+.box h2 {
+    margin-bottom: 25px;
+}
+
+.box label {
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+.box select {
+    margin-bottom: 10px;
+}
+
+.lista-alunos {
+    margin-top: 25px;
+    gap: 12px;
+}
+
+.aluno {
+    padding: 16px 20px;
+}
+
+.nome {
+    color: #4e342e;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.identificacao {
+    display: inline;
+}
+
+.subtitulo {
+    margin-top: 28px;
+    margin-bottom: 15px;
+    color: #6b4f35;
+    font-size: 18px;
+}
+
+.historico-titulo {
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid #e2d5c7;
+}
+
+.historico {
+    opacity: 0.75;
+    background: #faf8f5;
+}
+
+.historico .nome {
+    color: #75685d;
+}
+
+.motivo {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #8a7b6d;
+}
+
+.linha-aluno {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.botao-editar {
+    margin-top: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.form-edicao {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2d5c7;
+}
+
+.form-edicao button {
+    margin-right: 8px;
+}
+
+.lista-alunos-scroll {
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 6px;
+    margin-top: 15px;
+}
+
+/* Barra de rolagem discreta */
+.lista-alunos-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+
+.lista-alunos-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lista-alunos-scroll::-webkit-scrollbar-thumb {
+    background: #c8ad8d;
+    border-radius: 10px;
+}
+
+.lista-alunos-scroll::-webkit-scrollbar-thumb:hover {
+    background: #b08968;
+}
+
+</style>
+        
+</head>
+
+<body>
+
+<header>
+    <h1>👥 Alunos</h1>
+    <p>Cadastro e gerenciamento dos alunos</p>
+</header>
+
+<div class="container">
+
+    <p>
+        <a href="/" class="voltar">← Voltar ao início</a>
+    </p>
+
+    <div class="box">
+
+        <h2>➕ Cadastrar aluno</h2>
+
+        <form method="POST" action="/alunos">
+
+            <label>Nome do aluno</label>
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Ex.: João"
+                required
+            >
+
+            <label>Identificação / Observação</label>
+
+            <input
+                type="text"
+                name="identificacao"
+                placeholder="Ex.: pai do Pedro"
+            >
+
+            <label>Classe</label>
+
+            <select name="classe_id" required>
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome_classe in classes %}
+
+                    <option value="{{ id_classe }}">
+                        {{ nome_classe }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">
+                Cadastrar aluno
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>📋 Alunos cadastrados</h2>
+
+        <form method="GET" action="/alunos">
+
+            <label>Escolha uma classe</label>
+
+            <select
+                name="classe_id"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome_classe in classes %}
+
+                    <option
+                        value="{{ id_classe }}"
+                        {% if classe_id and classe_id|int == id_classe %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ nome_classe }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </form>
+
+
+                {% if alunos %}
+
+            <h3 class="subtitulo">Alunos atuais</h3>
+
+            <div class="lista-alunos-scroll">
+
+            {% for aluno in alunos %}
+
+                <div
+    class="aluno aluno-clicavel"
+    id="aluno-{{ aluno[0] }}"
+    onclick="abrirModalAluno({{ aluno[0] }})"
+>
+
+    <div class="nome">
+        {{ aluno[1] }}{% if aluno[3] %} ({{ aluno[3] }}){% endif %}
+    </div>
+
+</div>
+
+{% endfor %}
+                           
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        {% if alunos_historico %}
+
+            <h3 class="subtitulo historico-titulo">
+                Histórico da classe
+            </h3>
+
+            {% for aluno in alunos_historico %}
+
+                <div class="aluno historico">
+
+                    <div class="nome">
+
+                        <s>{{ aluno[1] }}</s>
+
+                        {% if aluno[5] %}
+
+                            <span class="motivo">
+                                ({{ aluno[5] }})
+                            </span>
+
+                        {% else %}
+
+                            <span class="motivo">
+                                (mudou de classe)
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% elif classe_id and not alunos %}
+
+            <div class="vazio">
+                Nenhum aluno cadastrado nesta classe.
+            </div>
+
+        {% endif %}            
+         
+
+    </div>
+
+</div>
+
+<script>
+
+
+function abrirEdicao(alunoId) {
+
+    document.getElementById(
+        "edicao-" + alunoId
+    ).style.display = "block";
+
+}
+
+function fecharEdicao(alunoId) {
+
+    document.getElementById(
+        "edicao-" + alunoId
+    ).style.display = "none";
+
+}
+
+
+/*
+ * ==========================================================
+ * PRESERVAÇÃO DO SCROLL — ABA ALUNOS
+ * ==========================================================
+ */
+
+if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+}
+
+
+const CHAVE_SCROLL = "posicaoScrollAlunos";
+
+
+/*
+ * Salva a posição atual
+ */
+function salvarScroll() {
+
+    sessionStorage.setItem(
+        CHAVE_SCROLL,
+        String(window.scrollY)
+    );
+
+}
+
+
+/*
+ * Restaura a posição salva
+ */
+function restaurarScroll() {
+
+    const posicao = sessionStorage.getItem(
+        CHAVE_SCROLL
+    );
+
+    if (posicao === null) {
+        return;
+    }
+
+    const valor = parseInt(posicao, 10);
+
+    if (Number.isNaN(valor)) {
+        sessionStorage.removeItem(CHAVE_SCROLL);
+        return;
+    }
+
+
+    /*
+     * Primeira tentativa
+     */
+    window.scrollTo(0, valor);
+
+
+    /*
+     * Segunda tentativa depois da renderização
+     */
+    requestAnimationFrame(function() {
+
+        window.scrollTo(0, valor);
+
+    });
+
+
+    /*
+     * Terceira tentativa.
+     * Isso ajuda quando o navegador ainda está
+     * terminando de montar os elementos da página.
+     */
+    setTimeout(function() {
+
+        window.scrollTo(0, valor);
+
+        sessionStorage.removeItem(
+            CHAVE_SCROLL
+        );
+
+    }, 100);
+
+}
+
+
+/*
+ * ==========================================================
+ * AO CARREGAR A PÁGINA
+ * ==========================================================
+ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        restaurarScroll();
+
+
+        /*
+         * Todos os formulários da aba Alunos
+         *
+         * Isso inclui:
+         * - cadastrar aluno
+         * - editar aluno
+         * - mudar de classe
+         * - selecionar classe
+         */
+
+        const formularios = document.querySelectorAll(
+            "form"
+        );
+
+
+        formularios.forEach(function(formulario) {
+
+            formulario.addEventListener(
+                "submit",
+                function() {
+
+                    salvarScroll();
+
+                }
+            );
+
+        });
+
+    }
+);
+
+
+/*
+ * ==========================================================
+ * ANTES DE SAIR DA PÁGINA
+ * ==========================================================
+ *
+ * Garante que a posição seja salva mesmo quando
+ * o formulário provoca uma navegação normal.
+ */
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+
+        salvarScroll();
+
+    }
+);
+
+
+/*
+ * ==========================================================
+ * PÁGINA VOLTOU DO HISTÓRICO DO NAVEGADOR
+ * ==========================================================
+ */
+
+window.addEventListener(
+    "pageshow",
+    function() {
+
+        restaurarScroll();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

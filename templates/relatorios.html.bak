@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Central de Relatórios</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#f5f1e8;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#2f241d;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:25px;
+}
+
+.topo{
+    background:#f7f2ea;
+    color:#5a4331;
+    padding:22px;
+    border-radius:25px;
+    box-sizing:border-box;
+    width:calc(100% - 120px);
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.topo h1{
+    margin:5;
+}
+
+.voltar{
+    color:#222;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.acoes-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.botao-relatorios {
+    background: white;
+    color: #222;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    transition: 0.2s;
+}
+
+.botao-relatorios:hover {
+    background: #eee7dc;
+}
+
+.card{
+    background:white;
+    border-radius:25px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    min-height:120px;
+    box-sizing:border-box;
+}
+
+#estatisticas .grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:20px;
+    width:100%;
+}
+
+#estatisticas .card{
+    min-width:0;
+    height:180px;
+}
+
+.card h2{
+    margin-top:0;
+    color:#6b513c;
+}
+
+.numero{
+    font-size:36px;
+    font-weight:bold;
+    color:#8b6a4e;
+    margin-top:10px;
+}
+
+.botao{
+    display:inline-block;
+    margin-top:15px;
+    background:#8b6a4e;
+    color:white;
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+select{
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    margin-top:10px;
+}
+
+.abas{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+.aba-btn {
+    background: white;
+    color: #2f241d;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    transition: all 0.25s ease;
+}
+
+.aba-btn:hover {
+    background: #eee7dc;
+    transform: translateY(-1px);
+}
+
+.aba-btn.ativa {
+    background: #8b6a4e;
+    color: white;
+    box-shadow: 0 4px 12px rgba(139,106,78,.25);
+}
+
+.aba{
+    display:none;
+}
+
+.aba.ativa{
+    display:block;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:20px;
+    width:100%;
+
+}
+
+@media (max-width:1000px){
+
+    #estatisticas .grid{
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+@media (max-width:600px){
+
+    #estatisticas .grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+.filtro-periodo{
+    display:flex;
+    align-items:end;
+    gap:15px;
+    margin-bottom:20px;
+    padding:20px;
+    background:#f7f2ea;
+    border-radius:18px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.campo-filtro{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    min-width:180px;
+}
+
+.campo-filtro label{
+    font-weight:bold;
+    color:#6b513c;
+}
+
+.campo-filtro select{
+    margin-top:0;
+}
+
+.filtro-botao{
+    margin-top:0;
+    border:none;
+    cursor:pointer;
+}
+
+.ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f7f2ea;
+    border: 1px solid #e5ddd2;
+    border-radius: 14px;
+    padding: 15px 18px;
+}
+
+.ranking-posicao {
+    width: 45px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.ranking-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ranking-info strong {
+    font-size: 17px;
+    color: #2f241d;
+}
+
+.ranking-info span {
+    font-size: 13px;
+    color: #777;
+}
+
+.ranking-oferta {
+    font-size: 17px;
+    font-weight: bold;
+    color: #8b6a4e;
+    white-space: nowrap;
+}
+
+.acoes-cabecalho{
+    position:absolute;
+    top:25px;
+    right:25px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.botao-relatorio-mensal{
+    display:inline-block;
+
+    background:white;
+    color:#222;
+
+    text-decoration:none;
+
+    padding:10px 18px;
+    border-radius:10px;
+
+    font-weight:bold;
+
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.cabecalho{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topo">
+
+    <h1>📊 Central de Relatórios</h1>
+
+    <p>
+        Relatórios e estatísticas da Escola Bíblica Dominical
+    </p>
+
+</div>
+
+<form class="filtro-periodo" action="/relatorios" method="get">
+
+    <div class="campo-filtro">
+
+        <label for="ano">Ano</label>
+
+        <select name="ano" id="ano">
+
+            <option value="2026"
+                {% if ano == 2026 %}selected{% endif %}>
+                2026
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <div class="campo-filtro">
+
+        <label for="mes">Mês</label>
+
+        <select name="mes" id="mes">
+
+            <option value="1" {% if mes == 1 %}selected{% endif %}>Janeiro</option>
+            <option value="2" {% if mes == 2 %}selected{% endif %}>Fevereiro</option>
+            <option value="3" {% if mes == 3 %}selected{% endif %}>Março</option>
+            <option value="4" {% if mes == 4 %}selected{% endif %}>Abril</option>
+            <option value="5" {% if mes == 5 %}selected{% endif %}>Maio</option>
+            <option value="6" {% if mes == 6 %}selected{% endif %}>Junho</option>
+            <option value="7" {% if mes == 7 %}selected{% endif %}>Julho</option>
+            <option value="8" {% if mes == 8 %}selected{% endif %}>Agosto</option>
+            <option value="9" {% if mes == 9 %}selected{% endif %}>Setembro</option>
+            <option value="10" {% if mes == 10 %}selected{% endif %}>Outubro</option>
+            <option value="11" {% if mes == 11 %}selected{% endif %}>Novembro</option>
+            <option value="12" {% if mes == 12 %}selected{% endif %}>Dezembro</option>
+
+        </select>
+
+    </div>
+
+
+    <button class="botao filtro-botao" type="submit">
+        Atualizar
+    </button>
+
+</form>
+
+    <div class="abas">
+
+    <button class="aba-btn ativa" onclick="abrirAba('estatisticas')">
+        📈 Estatísticas
+    </button>
+
+    <button class="aba-btn" onclick="abrirAba('ranking')">
+        🏆 Ranking
+    </button>
+
+</div>
+
+<div id="estatisticas" class="aba ativa">
+
+    <div class="grid">
+
+        <div class="card">
+            <h2>📚 Total de Classes</h2>
+            <div class="numero">{{ total_classes }}</div>
+        </div>
+
+        <div class="card">
+            <h2>📖 Total de Bíblias</h2>
+            <div class="numero">{{ total_biblias }}</div>
+        </div>
+
+        <div class="card">
+            <h2>📘 Total de Revistas</h2>
+            <div class="numero">{{ total_revistas }}</div>
+        </div>
+
+        <div class="card">
+            <h2>💰 Total de Ofertas</h2>
+            <div class="numero">
+                R$ {{ "%.2f"|format(total_ofertas) }}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="ranking" class="aba">
+
+    <div class="card">
+
+        <h2>🏆 Ranking das Classes</h2>
+
+        {% if ranking %}
+
+            <div class="ranking-list">
+
+                {% for linha in ranking %}
+
+                    <div class="ranking-item">
+
+                        <div class="ranking-posicao">
+
+                            {% if loop.index == 1 %}
+                                🥇
+                            {% elif loop.index == 2 %}
+                                🥈
+                            {% elif loop.index == 3 %}
+                                🥉
+                            {% else %}
+                                {{ loop.index }}º
+                            {% endif %}
+
+                        </div>
+
+                        <div class="ranking-info">
+
+                            <strong>
+                                {{ linha[0] }}
+                            </strong>
+
+                            <span>
+                                📖 {{ linha[2] or 0 }} Bíblias
+                                •
+                                📘 {{ linha[3] or 0 }} Revistas
+                            </span>
+
+                        </div>
+
+                        <div class="ranking-oferta">
+
+                            R$ {{ "%.2f"|format(linha[1] or 0) }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>
+                Ainda não existem registros para este período.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<div id="mensal" class="aba">
+
+    <div class="card">
+
+        <h2>📅 Relatório Mensal</h2>
+
+        <p>
+            Visualize ofertas, bíblias, revistas e desempenho das classes.
+        </p>
+
+        <form action="/relatorio_mes">
+
+            <label>Ano</label>
+
+            <select name="ano">
+                <option value="2026">2026</option>
+            </select>
+
+            <label>Mês</label>
+
+            <select name="mes">
+                <option value="1">Janeiro</option>
+                <option value="2">Fevereiro</option>
+                <option value="3">Março</option>
+                <option value="4">Abril</option>
+                <option value="5">Maio</option>
+                <option value="6">Junho</option>
+                <option value="7">Julho</option>
+                <option value="8">Agosto</option>
+                <option value="9" selected>Setembro</option>
+                <option value="10">Outubro</option>
+                <option value="11">Novembro</option>
+                <option value="12">Dezembro</option>
+            </select>
+
+            <button class="botao" type="submit">
+                Abrir Relatório
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+function abrirAba(id){
+
+    document.querySelectorAll(".aba").forEach(function(el){
+        el.classList.remove("ativa");
+    });
+
+    document.querySelectorAll(".aba-btn").forEach(function(el){
+        el.classList.remove("ativa");
+    });
+
+    document.getElementById(id).classList.add("ativa");
+
+    event.currentTarget.classList.add("ativa");
+}
+
+</script>
+
+</body>
+</html>

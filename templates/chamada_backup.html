@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chamada — Controle da EBD</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f1e8;
+            color: #222;
+        }
+
+        .pagina {
+            padding: 25px;
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cabecalho h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .voltar {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .acoes-cabecalho {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .botao-relatorios {
+            background: white;
+            color: #333;
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 3px 12px rgba(0,0,0,.08);
+            transition: 0.2s;
+        }
+
+        .botao-relatorios:hover {
+            background: #eee7dc;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filtro {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .filtro label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .filtro select {
+            min-width: 220px;
+            padding: 8px;
+        }
+
+        .folha {
+            background: #fffdf4;
+            border: 1px solid #999;
+            overflow-x: auto;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .titulo-folha {
+            text-align: center;
+            padding: 15px;
+            border-bottom: 2px solid #555;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 900px;
+        }
+
+        th,
+        td {
+            border: 1px solid #777;
+            text-align: center;
+            padding: 6px;
+            height: 34px;
+        }
+
+        th {
+            background: #e8e4d5;
+            font-size: 13px;
+        }
+
+        .mes {
+            background: #d8d3c2;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            height: 35px;
+        }
+
+        .dia {
+            background: #e8e4d5;
+            font-size: 13px;
+            font-weight: bold;
+            width: 55px;
+        }
+
+        .col-numero {
+            width: 45px;
+        }
+
+        .col-aluno {
+            min-width: 230px;
+            text-align: left;
+        }
+
+        .aluno {
+            text-align: left;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .identificacao {
+            display: block;
+            font-size: 11px;
+            color: #777;
+            font-weight: normal;
+        }
+
+        .presenca {
+            font-weight: bold;
+            cursor: pointer;
+            width: 48px;
+            height: 36px;
+            padding: 4px 6px;
+
+            border: 1px solid #aaa;
+            border-radius: 8px;
+
+            background: #fffdf4;
+            color: #555;
+
+            text-align: center;
+
+            transition:
+                background 0.15s ease,
+                border-color 0.15s ease,
+                transform 0.1s ease;
+        }
+
+        .presenca.presenca-p {
+            background: #e5f5e9;
+            color: #087f23;
+            border-color: #72b87c;
+        }
+
+        .presenca.presenca-a {
+            background: #fde8e8;
+            color: #b00020;
+            border-color: #d98282;
+        }
+
+        .presenca.presenca-vazia {
+            background: #fffdf4;
+            color: #777;
+            border-color: #aaa;
+        }
+
+        .presenca:hover {
+            border-color: #555;
+            transform: scale(1.05);
+        }
+
+        .presenca:focus {
+            outline: none;
+            border-color: #1769aa;
+            box-shadow: 0 0 0 2px rgba(23, 105, 170, 0.15);
+        }
+
+        .presente {
+            color: #087f23;
+        }
+
+        .ausente {
+            color: #b00020;
+        }
+
+        .sem-registro {
+            color: #999;
+        }
+
+        .status {
+            min-width: 150px;
+        }
+
+        .estatisticas-titulo {
+            background: #777;
+            color: white;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 12px;
+        }
+
+        .estatistica {
+            background: #f0eee5;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 12px;
+        }
+
+        .acoes {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .botao {
+            border: none;
+            padding: 10px 16px;
+            height: 40px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .botao-resetar {
+            background: #eee;
+            color: #555;
+            padding: 10px 12px;
+        }
+
+        .botao-resetar:hover {
+            background: #e2e2e2;
+        }
+
+        .botao-sem-aula {
+            background: #f1f1f1;
+            color: #666;
+            border: 1px solid #d5d5d5;
+            padding: 7px 10px;
+            font-size: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .botao-sem-aula:hover {
+            background: #e7e7e7;
+        }
+
+        .botao-salvar {
+            background: #1769aa;
+            color: white;
+        }
+
+        .botao-voltar {
+            background: #ddd;
+            color: #222;
+        }
+
+        .aviso {
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #e0c56e;
+            margin-bottom: 20px;
+            border-radius: 7px;
+        }
+    
+/* ==========================================================
+   MODAL — CHAMADA INCOMPLETA
+   ========================================================== */
+
+.modal-aviso {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-aviso-conteudo {
+    width: min(500px, 100%);
+    background: #fffdf4;
+    border-radius: 14px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.30);
+    overflow: hidden;
+}
+
+.modal-aviso-cabecalho {
+    padding: 18px 22px;
+    background: #e8e4d5;
+    border-bottom: 1px solid #c8c3b4;
+}
+
+.modal-aviso-cabecalho h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.modal-aviso-corpo {
+    padding: 20px 22px;
+}
+
+.modal-aviso-texto {
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.lista-incompletos {
+    max-height: 190px;
+    overflow-y: auto;
+    padding: 8px 12px;
+    margin: 12px 0 18px;
+    border: 1px solid #d5d0c3;
+    border-radius: 8px;
+    background: #f5f2e9;
+}
+
+/* Barra de rolagem sutil */
+.lista-incompletos::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista-incompletos::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.lista-incompletos::-webkit-scrollbar-thumb {
+    background: #b8b3a6;
+    border-radius: 10px;
+}
+
+.lista-incompletos::-webkit-scrollbar-thumb:hover {
+    background: #969184;
+}
+
+.lista-incompletos div {
+    padding: 4px 0;
+    font-weight: bold;
+}
+
+.modal-aviso-rodape {
+    padding: 14px 22px;
+    border-top: 1px solid #d5d0c3;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.botao-aviso {
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    background: #1769aa;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao-aviso:hover {
+    opacity: 0.9;
+}
+
+.presenca-bloqueada {
+    background: #f5f3ea !important;
+    color: #555 !important;
+    border: 1px solid #c8c4b5 !important;
+    cursor: not-allowed;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <div class="cabecalho">
+
+    <h1>📋 Chamada da EBD</h1>
+
+    <div class="acoes-cabecalho">
+
+        <a class="botao-relatorios" href="/relatorio_mes">
+            📊 Relatório Mensal
+        </a>
+
+        <a class="voltar" href="/">
+            ← Voltar
+        </a>
+
+    </div>
+
+</div>
+
+
+    <div class="filtros">
+
+        <div class="filtro">
+
+            <label>Domingo</label>
+
+            <select id="domingo" onchange="abrirChamada()">
+
+                <option value="">
+                    Selecione o domingo
+                </option>
+
+                {% for id_domingo, data, nao_teve_aula in domingos %}
+
+                    <option
+                        value="{{ id_domingo }}"
+                        {% if domingo_id|int == id_domingo %}selected{% endif %}
+                    >
+                        {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
+                    </option>
+
+                {% endfor %}
+
+                        </select>
+
+            {% if domingo_id %}
+
+                <form
+                    method="POST"
+                    action="/domingo/sem-aula"
+                    style="margin-top: 8px;"
+                >
+
+                    <input
+                        type="hidden"
+                        name="domingo_id"
+                        value="{{ domingo_id }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="classe_id"
+                        value="{{ classe_id }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="sem_aula"
+                        value="1"
+                    >
+
+                    <button
+                        type="submit"
+                        class="botao-sem-aula"
+                        onclick="return confirm('Marcar este domingo como sem aula?');"
+                    >
+                        🚫 Não teve aula
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="filtro">
+
+            <label>Classe</label>
+
+            <select id="classe" onchange="abrirChamada()">
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome_classe in classes %}
+
+                    <option
+                        value="{{ id_classe }}"
+                        {% if classe_id|int == id_classe %}selected{% endif %}                     
+                    >
+                        {{ nome_classe }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    {% if not alunos %}
+
+        <div class="aviso">
+            Selecione um domingo e uma classe para visualizar a chamada.
+        </div>
+
+    {% else %}
+
+        <div class="folha">
+
+            <div class="titulo-folha">
+
+                CHAMADA —
+                {{ classe_selecionada }}
+
+            </div>
+
+
+            <form method="POST" onsubmit="salvarPosicaoScroll(); return validarChamada()">
+
+                <input
+                    type="hidden"
+                    name="domingo_id"
+                    value="{{ domingo_id }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="classe_id"
+                    value="{{ classe_id }}"
+                >
+
+
+                <table>
+
+                    <thead>
+
+                        <!-- LINHA DOS MESES -->
+
+                        <tr>
+
+                            <th
+                                class="mes"
+                                rowspan="2"
+                            >
+                                Nº
+                            </th>
+
+                            <th
+                                class="mes col-aluno"
+                                rowspan="2"
+                            >
+                                ALUNO
+                            </th>
+
+
+                            {% for chave_mes, domingos_mes in domingos_por_mes.items() %}
+
+                                <th
+                                    class="mes"
+                                    colspan="{{ domingos_mes|length }}"
+                                >
+
+                                    {% set ano = chave_mes[0:4] %}
+                                    {% set mes = chave_mes[5:7] %}
+
+                                    {% if mes == "01" %}
+                                        JANEIRO
+                                    {% elif mes == "02" %}
+                                        FEVEREIRO
+                                    {% elif mes == "03" %}
+                                        MARÇO
+                                    {% elif mes == "04" %}
+                                        ABRIL
+                                    {% elif mes == "05" %}
+                                        MAIO
+                                    {% elif mes == "06" %}
+                                        JUNHO
+                                    {% elif mes == "07" %}
+                                        JULHO
+                                    {% elif mes == "08" %}
+                                        AGOSTO
+                                    {% elif mes == "09" %}
+                                        SETEMBRO
+                                    {% elif mes == "10" %}
+                                        OUTUBRO
+                                    {% elif mes == "11" %}
+                                        NOVEMBRO
+                                    {% elif mes == "12" %}
+                                        DEZEMBRO
+                                    {% endif %}
+
+                                    / {{ ano }}
+
+                                </th>
+
+                            {% endfor %}
+
+
+                            <th
+                                class="mes"
+                                rowspan="2"
+                            >
+                                STATUS
+                            </th>
+
+                        </tr>
+
+
+                        <!-- LINHA DOS DOMINGOS -->
+
+                        <tr>
+
+                            {% for chave_mes, domingos_mes in domingos_por_mes.items() %}
+
+                                {% for id_domingo, data, nao_teve_aula in domingos_mes %}
+
+                                    <th class="dia">
+
+                                        {{ data[8:10] }}
+
+                                    </th>
+
+                                {% endfor %}
+
+                            {% endfor %}
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for aluno in alunos %}
+
+                            <tr>
+
+                                <td>
+                                    {{ "%02d"|format(loop.index) }}
+                                </td>
+
+
+                                <td class="aluno">
+
+    {{ aluno[1] }}
+
+    {% if aluno|length > 3 and aluno[3] %}
+
+        <span class="identificacao">
+            {{ aluno[3] }}
+        </span>
+
+    {% endif %}
+
+</td>
+
+
+                                {% for chave_mes, domingos_mes in domingos_por_mes.items() %}
+
+                                    {% for id_domingo, data, nao_teve_aula in domingos_mes %}
+
+                                         <td>
+
+    {% set presenca_atual = frequencias.get(aluno[0], {}).get(data) if data == domingo_selecionado else none %}
+
+    {% if id_domingo|string == domingo_id|string %}
+
+        <select
+            name="aluno_{{ aluno[0] }}_{{ id_domingo }}"
+            class="presenca"
+        >
+
+            <option value="" {% if presenca_atual is none %}selected{% endif %}>
+                -
+            </option>
+
+            <option value="P" {% if presenca_atual == 1 %}selected{% endif %}>
+                P
+            </option>
+
+            <option value="A" {% if presenca_atual == 0 %}selected{% endif %}>
+                A
+            </option>
+
+        </select>
+
+    {% else %}
+
+        <select
+            name="aluno_{{ aluno[0] }}_{{ id_domingo }}"
+            class="presenca-bloqueada"
+            disabled
+        >
+
+            <option value="" {% if presenca_atual is none %}selected{% endif %}>
+                -
+            </option>
+
+            <option value="P" {% if presenca_atual == 1 %}selected{% endif %}>
+                P
+            </option>
+
+            <option value="A" {% if presenca_atual == 0 %}selected{% endif %}>
+                A
+            </option>
+
+        </select>
+
+    {% endif %}
+
+</td>
+
+                                    {% endfor %}
+
+                                {% endfor %}
+
+
+                                <td class="status">
+
+                                    {% set status = obter_status_aluno(aluno[0]) %}
+
+                                    {% if status.status == "matriculado" %}
+
+                                        <span class="presente">
+                                            🟢 Matriculado
+                                        </span>
+
+                                    {% elif status.status == "visitante" %}
+
+                                        <span>
+                                            🟠 Visitante
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="ausente">
+                                            🔴 Não matriculado
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+
+                    <tfoot>
+
+                        <tr>
+                            <td colspan="100%" class="estatisticas-titulo">
+                                ESTATÍSTICAS
+                            </td>
+                        </tr>
+
+                        {% set matriculados = namespace(total=0) %}
+                        {% set presentes = namespace(total=0) %}
+                        {% set ausentes = namespace(total=0) %}
+                        {% set visitantes = namespace(total=0) %}
+
+                        {% for aluno in alunos %}
+
+                            {% set status_aluno = obter_status_aluno(aluno[0]) %}
+
+                            {% if status_aluno.status == "matriculado" %}
+                                {% set matriculados.total = matriculados.total + 1 %}
+                            {% endif %}
+
+                            {% if status_aluno.status == "visitante" %}
+                                {% set visitantes.total = visitantes.total + 1 %}
+                            {% endif %}
+
+                            {% if domingo_selecionado %}
+                                {% set presenca = frequencias.get(aluno[0], {}).get(domingo_selecionado) %}
+
+                                {% if presenca == 1 %}
+                                    {% set presentes.total = presentes.total + 1 %}
+                                {% elif presenca == 0 %}
+                                    {% set ausentes.total = ausentes.total + 1 %}
+                                {% endif %}
+                            {% endif %}
+
+                        {% endfor %}
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                ALUNOS MATRICULADOS
+                            </td>
+                            <td colspan="100%">
+                                {{ matriculados.total }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                PRESENTES
+                            </td>
+                            <td colspan="100%">
+                                {{ presentes.total }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                AUSENTES
+                            </td>
+                            <td colspan="100%">
+                                {{ ausentes.total }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                VISITANTES
+                            </td>
+                            <td colspan="100%">
+                                {{ visitantes.total }}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                BÍBLIAS
+                            </td>
+                            <td colspan="100%">
+                                <input
+                                   type="number"
+                                   name="biblias"
+                                   min="0"
+                                   value="{{ registro_classe.biblias }}"
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                REVISTAS
+                            </td>
+                            <td colspan="100%">
+                                <input
+                                   type="number"
+                                   name="revistas"
+                                   min="0"
+                                   value="{{ registro_classe.revistas }}"
+                                >
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="estatistica">
+                                OFERTAS
+                            </td>
+                            <td colspan="100%">
+                                <input
+                                   type="number"
+                                   name="oferta"
+                                   min="0"
+                                   step="0.01"
+                                   value="{{ registro_classe.oferta }}"
+                                >
+                            </td>
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+
+                <div class="acoes">
+
+    <button
+    type="button"
+    class="botao botao-resetar"
+    onclick="resetarChamada()"
+>
+    ↺ Resetar
+</button>
+
+    <button
+        type="submit"
+        class="botao botao-salvar"
+    >
+        💾 Salvar chamada
+    </button>
+
+    <a
+        href="/"
+        class="botao botao-voltar"
+    >
+        Voltar
+    </a>
+
+</div>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+<!-- ==========================================================
+     MODAL — CHAMADA INCOMPLETA
+     ========================================================== -->
+
+<div
+    id="modal-chamada-incompleta"
+    class="modal-aviso"
+>
+    <div class="modal-aviso-conteudo">
+
+        <div class="modal-aviso-cabecalho">
+            <h2>⚠️ CHAMADA INCOMPLETA</h2>
+        </div>
+
+        <div class="modal-aviso-corpo">
+
+            <p class="modal-aviso-texto">
+                Os seguintes alunos estão sem registro:
+            </p>
+
+            <div
+                id="lista-incompletos"
+                class="lista-incompletos"
+            ></div>
+
+            <p class="modal-aviso-texto">
+                Marque <strong>P</strong> ou <strong>A</strong>
+                antes de salvar.
+            </p>
+
+        </div>
+
+        <div class="modal-aviso-rodape">
+
+            <button
+                type="button"
+                class="botao-aviso"
+                onclick="fecharModalChamada()"
+            >
+                OK
+            </button>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+function abrirChamada() {
+
+    const domingo = document.getElementById("domingo").value;
+    const classe = document.getElementById("classe").value;
+
+    if (domingo && classe) {
+
+        sessionStorage.setItem(
+            "chamada_scroll",
+            window.scrollY
+        );
+
+        window.location.href =
+            "/chamada?domingo_id=" +
+            domingo +
+            "&classe_id=" +
+            classe;
+    }
+}
+
+window.addEventListener("load", function() {
+
+    const scrollSalvo =
+        sessionStorage.getItem("chamada_scroll");
+
+    if (scrollSalvo !== null) {
+
+        window.scrollTo(
+            0,
+            parseInt(scrollSalvo, 10)
+        );
+
+        sessionStorage.removeItem("chamada_scroll");
+    }
+
+});
+
+function atualizarCorPresenca(select) {
+
+    select.classList.remove(
+        "presenca-p",
+        "presenca-a",
+        "presenca-vazia"
+    );
+
+    if (select.value === "P") {
+
+        select.classList.add("presenca-p");
+
+    } else if (select.value === "A") {
+
+        select.classList.add("presenca-a");
+
+    } else {
+
+        select.classList.add("presenca-vazia");
+
+    }
+}
+
+function salvarPosicaoScroll() {
+
+    sessionStorage.setItem(
+        "chamada_scroll",
+        window.scrollY
+    );
+
+}
+
+function inicializarCoresPresenca() {
+
+    const selects =
+        document.querySelectorAll(".presenca");
+
+    selects.forEach(function(select) {
+
+        atualizarCorPresenca(select);
+
+        select.addEventListener(
+            "change",
+            function() {
+
+                atualizarCorPresenca(select);
+
+            }
+        );
+
+    });
+
+}
+
+function validarChamada() {
+
+    const domingo =
+        document.getElementById("domingo").value;
+
+    if (!domingo) {
+
+        alert(
+            "⚠️ Selecione um domingo antes de salvar."
+        );
+
+        return false;
+    }
+
+    const campos =
+        document.querySelectorAll(
+            'select[name$="_' + domingo + '"]'
+        );
+
+    let incompletos = [];
+
+    campos.forEach(function(select) {
+
+        if (select.value === "") {
+
+            const linha =
+                select.closest("tr");
+
+            const nomeElemento =
+                linha?.querySelector(".aluno");
+
+            let nome = "";
+
+            if (nomeElemento) {
+
+                nome =
+                    nomeElemento
+                        .childNodes[0]
+                        ?.textContent
+                        .trim();
+            }
+
+            incompletos.push(
+                nome || "Aluno sem nome"
+            );
+        }
+
+    });
+
+    if (incompletos.length > 0) {
+
+        const modal =
+            document.getElementById(
+                "modal-chamada-incompleta"
+            );
+
+        const lista =
+            document.getElementById(
+                "lista-incompletos"
+            );
+
+        lista.innerHTML = "";
+
+        incompletos.forEach(function(nome) {
+
+            const item =
+                document.createElement("div");
+
+            item.textContent = nome;
+
+            lista.appendChild(item);
+
+        });
+
+        modal.style.display = "flex";
+
+        return false;
+    }
+
+    return true;
+}
+
+
+function fecharModalChamada() {
+
+    const modal =
+        document.getElementById(
+            "modal-chamada-incompleta"
+        );
+
+    modal.style.display = "none";
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        inicializarCoresPresenca();
+
+    }
+);
+
+function resetarChamada() {
+
+    const domingo = document.getElementById("domingo").value;
+    const classe = document.getElementById("classe").value;
+
+    if (!domingo || !classe) {
+
+        alert("Selecione um domingo e uma classe antes de resetar.");
+
+        return;
+    }
+
+    const confirmar = confirm(
+        "Tem certeza que deseja resetar a chamada deste domingo e desta classe?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const formulario = document.createElement("form");
+
+    formulario.method = "POST";
+    formulario.action = "/chamada/resetar";
+
+    const campoDomingo = document.createElement("input");
+
+    campoDomingo.type = "hidden";
+    campoDomingo.name = "domingo_id";
+    campoDomingo.value = domingo;
+
+    const campoClasse = document.createElement("input");
+
+    campoClasse.type = "hidden";
+    campoClasse.name = "classe_id";
+    campoClasse.value = classe;
+
+    formulario.appendChild(campoDomingo);
+    formulario.appendChild(campoClasse);
+
+    document.body.appendChild(formulario);
+
+    salvarPosicaoScroll();
+
+    formulario.submit();
+}
+
+</script>
+
+</body>
+
+</html>

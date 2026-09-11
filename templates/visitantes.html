@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Visitantes — Controle da EBD</title>
+
+    <style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f5efe6 0%,
+            #eee5d8 100%
+        );
+
+    color: #40352c;
+}
+
+
+/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.pagina {
+    width: min(1400px, 94%);
+
+    margin: 0 auto;
+
+    padding: 30px 0 50px;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.cabecalho {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+
+    padding: 22px 25px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fffdf9,
+            #f7f0e5
+        );
+
+    border: 1px solid #dfd1bf;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 20px rgba(80, 55, 35, 0.08);
+}
+
+h1 {
+    margin: 0;
+
+    color: #68472f;
+
+    font-size: 26px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.3px;
+}
+
+
+/* =========================================================
+   BOTÃO VOLTAR
+   ========================================================= */
+
+.voltar {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 16px;
+
+    background: #f3eadc;
+
+    border: 1px solid #d8c6af;
+
+    border-radius: 10px;
+
+    color: #604731;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 3px 8px rgba(80, 55, 35, 0.06);
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.voltar:hover {
+    background: #ead8c0;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 14px rgba(80, 55, 35, 0.11);
+}
+
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+
+.filtros {
+    display: flex;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 25px;
+}
+
+.filtro {
+    flex: 1;
+
+    min-width: 250px;
+
+    padding: 18px 20px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fffdf9,
+            #faf5ed
+        );
+
+    border: 1px solid #dfd1bf;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 6px 18px rgba(80, 55, 35, 0.07);
+}
+
+.filtro label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #704c32;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+select,
+input {
+    width: 100%;
+
+    min-width: 0;
+
+    height: 42px;
+
+    padding: 0 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #cfbda7;
+
+    border-radius: 9px;
+
+    color: #49382c;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    outline: none;
+
+    box-shadow:
+        0 2px 6px rgba(80, 55, 35, 0.05);
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+select:focus,
+input:focus {
+    border-color: #8b6243;
+
+    box-shadow:
+        0 0 0 3px rgba(139, 98, 67, 0.13);
+}
+
+
+/* =========================================================
+   FOLHA PRINCIPAL
+   ========================================================= */
+
+.folha {
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fffdf9,
+            #faf5ed
+        );
+
+    border: 1px solid #dfd1bf;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 8px 25px rgba(80, 55, 35, 0.08);
+}
+
+
+/* =========================================================
+   TÍTULO DA FOLHA
+   ========================================================= */
+
+.titulo {
+    padding: 17px 20px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f7f0e5
+        );
+
+    border-bottom: 1px solid #dfd1bf;
+
+    color: #68472f;
+
+    text-align: center;
+
+    font-size: 19px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+form {
+    padding: 22px;
+}
+
+.campo {
+    margin-bottom: 18px;
+}
+
+.campo label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #704c32;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.botao {
+    border: 1px solid #d6b38a;
+
+    padding: 11px 18px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.salvar {
+    background: #f3dfc3;
+
+    color: #604731;
+
+    box-shadow:
+        0 3px 8px rgba(80, 55, 35, 0.07);
+}
+
+.salvar:hover {
+    background: #ead0ad;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 7px 14px rgba(80, 55, 35, 0.12);
+}
+
+
+/* =========================================================
+   TABELA DE VISITANTES
+   ========================================================= */
+
+table {
+    width: 100%;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: 11px 14px;
+
+    border-right: 1px solid #ddd9d1;
+
+    border-bottom: 1px solid #ddd9d1;
+
+    color: #493f36;
+
+    text-align: left;
+}
+
+th:last-child,
+td:last-child {
+    border-right: none;
+}
+
+th {
+    background: #eeece3;
+
+    color: #42474c;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+td {
+    background: #ffffff;
+
+    font-size: 14px;
+}
+
+tbody tr {
+    transition: background 0.15s ease;
+}
+
+tbody tr:hover td {
+    background: #faf6ef;
+}
+
+.numero {
+    width: 70px;
+
+    text-align: center;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   AVISO
+   ========================================================= */
+
+.aviso {
+    margin: 20px;
+
+    padding: 16px 18px;
+
+    background: #fffaf0;
+
+    border: 1px solid #ead9ad;
+
+    border-radius: 10px;
+
+    color: #67572f;
+
+    box-shadow:
+        0 4px 12px rgba(80, 55, 35, 0.04);
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .pagina {
+        width: 94%;
+
+        padding-top: 18px;
+    }
+
+    .cabecalho {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 15px;
+
+        text-align: center;
+    }
+
+    .voltar {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .filtro {
+        min-width: 100%;
+    }
+
+    .folha {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 650px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <div class="cabecalho">
+
+        <h1>👤 Visitantes da EBD</h1>
+
+        <a class="voltar" href="/">
+            ← Voltar
+        </a>
+
+    </div>
+
+
+    <div class="filtros">
+
+        <div class="filtro">
+
+            <label>Domingo</label>
+
+            <select
+                onchange="location.href='/visitantes?domingo_id=' + this.value + '&classe_id={{ classe_id or '' }}'"
+            >
+
+                <option value="">
+                    Selecione o domingo
+                </option>
+
+                {% for id_domingo, data, nao_teve_aula in domingos %}
+
+                    <option
+                        value="{{ id_domingo }}"
+                        {% if domingo_id and domingo_id|int == id_domingo %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="filtro">
+
+            <label>Classe</label>
+
+            <select
+                onchange="location.href='/visitantes?classe_id=' + this.value + '&domingo_id={{ domingo_id or '' }}'"
+            >
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome in classes %}
+
+                    <option
+                        value="{{ id_classe }}"
+                        {% if classe_id and classe_id|int == id_classe %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ nome }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    {% if domingo_id and classe_id %}
+
+        <div class="folha">
+
+            <div class="titulo">
+                CADASTRAR VISITANTE
+            </div>
+
+            <form method="POST">
+
+                <input
+                    type="hidden"
+                    name="domingo_id"
+                    value="{{ domingo_id }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="classe_id"
+                    value="{{ classe_id }}"
+                >
+
+                <div class="campo">
+
+                    <label>Nome</label>
+
+                    <input
+                        type="text"
+                        name="nome"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label>Identificação</label>
+
+                    <input
+                        type="text"
+                        name="identificacao"
+                        placeholder="Ex.: pai da Ana"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="botao salvar"
+                >
+                    💾 Cadastrar visitante
+                </button>
+
+            </form>
+
+
+            <div class="titulo">
+                VISITANTES CADASTRADOS
+            </div>
+
+
+            {% if visitantes %}
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th class="numero">Nº</th>
+                            <th>Nome</th>
+                            <th>Identificação</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for visitante in visitantes %}
+
+    <tr
+        onclick="confirmarExclusao(
+            {{ visitante[0] }},
+            '{{ visitante[1]|e }}'
+        )"
+        style="cursor: pointer;"
+        title="Clique para excluir este visitante"
+    >
+
+        <td class="numero">
+            {{ "%02d"|format(loop.index) }}
+        </td>
+
+        <td>
+            {{ visitante[1] }}
+        </td>
+
+        <td>
+            {{ visitante[2] or "—" }}
+        </td>
+
+    </tr>
+
+{% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% else %}
+
+                <div class="aviso">
+                    Nenhum visitante cadastrado para esta chamada.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div class="aviso">
+            Selecione um domingo e uma classe para cadastrar visitantes.
+        </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+
+function confirmarExclusao(visitanteId, nome) {
+
+    const confirmar = confirm(
+        "Deseja excluir o visitante \"" +
+        nome +
+        "\" deste domingo?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const formulario = document.createElement("form");
+
+    formulario.method = "POST";
+    formulario.action = "/visitantes/excluir";
+
+    formulario.innerHTML = `
+        <input
+            type="hidden"
+            name="visitante_id"
+            value="${visitanteId}"
+        >
+
+        <input
+            type="hidden"
+            name="domingo_id"
+            value="{{ domingo_id }}"
+        >
+
+        <input
+            type="hidden"
+            name="classe_id"
+            value="{{ classe_id }}"
+        >
+    `;
+
+    document.body.appendChild(formulario);
+
+    formulario.submit();
+}
+
+</script>
+
+</body>
+
+</html>

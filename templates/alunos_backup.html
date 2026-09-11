@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alunos — Controle da EBD</title>
+
+   <style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f6f2;
+    color: #3d2f24;
+}
+
+header {
+    padding: 30px;
+    text-align: center;
+    background: #ffffff;
+    border-bottom: 2px solid #d6c2ad;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    color: #3d2f24;
+}
+
+header p {
+    margin: 0;
+    color: #9ca3af;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.bloco {
+    background: #ffffff;
+    border: 1px solid #d6c2ad;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.bloco h2 {
+    margin-top: 0;
+    color: #6b4f35;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #5b4331;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #d6c2ad;
+    border-radius: 8px;
+    background: #fdfbf8;
+    color: #3d2f24;
+    font-size: 15px;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #b08968;
+}
+
+button {
+    margin-top: 20px;
+    padding: 11px 18px;
+    border: 1px solid #b08968;
+    border-radius: 8px;
+    background: #c8ad8d;
+    color: #4e342e;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #b08968;
+    color: white;
+}
+
+.voltar {
+    display: inline-block;
+    margin-bottom: 25px;
+    text-decoration: none;
+    color: #6b4f35;
+    font-weight: bold;
+}
+
+.voltar:hover {
+    text-decoration: underline;
+}
+
+.lista-alunos {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.aluno {
+    background: #f7f3ee;
+    border: 1px solid #d6b38a;
+    border-radius: 10px;
+    padding: 15px 18px;
+    color: #4e342e;
+}
+
+.aluno strong {
+    color: #6b4f35;
+}
+
+</style>
+        
+</head>
+
+<body>
+
+<header>
+    <h1>👥 Alunos</h1>
+    <p>Cadastro e gerenciamento dos alunos</p>
+</header>
+
+<div class="container">
+
+    <p>
+        <a href="/">← Voltar ao início</a>
+    </p>
+
+    <div class="box">
+
+        <h2>➕ Cadastrar aluno</h2>
+
+        <form method="POST" action="/alunos">
+
+            <label>Nome do aluno</label>
+
+            <input
+                type="text"
+                name="nome"
+                placeholder="Ex.: João"
+                required
+            >
+
+            <label>Identificação / Observação</label>
+
+            <input
+                type="text"
+                name="identificacao"
+                placeholder="Ex.: pai do Pedro"
+            >
+
+            <label>Classe</label>
+
+            <select name="classe_id" required>
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome_classe in classes %}
+
+                    <option value="{{ id_classe }}">
+                        {{ nome_classe }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <button type="submit">
+                Cadastrar aluno
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="box">
+
+        <h2>📋 Alunos cadastrados</h2>
+
+        <form method="GET" action="/alunos">
+
+            <label>Escolha uma classe</label>
+
+            <select
+                name="classe_id"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome_classe in classes %}
+
+                    <option
+                        value="{{ id_classe }}"
+                        {% if classe_id and classe_id|int == id_classe %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ nome_classe }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </form>
+
+
+        {% if alunos %}
+
+            {% for aluno in alunos %}
+
+                <div class="aluno">
+
+                    <div class="nome">
+                        {{ aluno[1] }}
+                    </div>
+
+                    {% if aluno[3] %}
+
+                        <div class="identificacao">
+                            {{ aluno[3] }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% elif classe_id %}
+
+            <div class="vazio">
+                Nenhum aluno cadastrado nesta classe.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

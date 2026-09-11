@@ -1,0 +1,648 @@
+
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Relatório Mensal</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#f5f1e8;
+    font-family:Arial, Helvetica, sans-serif;
+    color:#2f241d;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:25px;
+}
+
+.topo{
+    background:#f7f2ea;
+    color:#5a4331;
+    padding:22px 25px;
+    border-radius:18px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    border:1px solid #e5ddd2;
+}
+
+.topo p{
+    margin:8px 0 0;
+    color:#8b6a4e;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.topo h1{
+    margin:0;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+    border:1px solid #eee7dd;
+}
+
+.card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 16px rgba(0,0,0,.10);
+}
+
+.card{
+    transition:.2s ease;
+}
+
+.card h3{
+    margin:0;
+    color:#8b6a4e;
+    font-size:14px;
+}
+
+.card strong{
+    display:block;
+    margin-top:10px;
+    font-size:30px;
+}
+
+.bloco{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.bloco h2{
+    margin-top:0;
+    margin-bottom:18px;
+    color:#6b513c;
+    font-size:21px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#d8c3a5;
+    color:#4d3928;
+    padding:12px;
+    text-align:center;
+}
+
+th:first-child{
+    text-align:left;
+}
+
+th:last-child{
+    text-align:right;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #ececec;
+}
+
+.total{
+    background:#8b6a4e;
+    color:white;
+    font-weight:bold;
+}
+
+.valor{
+    text-align:right;
+}
+
+.voltar{
+    display:inline-block;
+    margin-top:15px;
+    background:#8b6a4e;
+    color:white;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:bold;
+}
+
+.tabela-resumo th:first-child,
+.tabela-resumo td:first-child{
+    width:45%;
+    text-align:left;
+}
+
+.tabela-resumo th:nth-child(2),
+.tabela-resumo td:nth-child(2){
+    width:15%;
+    text-align:center;
+}
+
+.tabela-resumo th:nth-child(3),
+.tabela-resumo td:nth-child(3){
+    width:15%;
+    text-align:center;
+}
+
+.tabela-resumo th:nth-child(4),
+.tabela-resumo td:nth-child(4){
+    width:25%;
+    text-align:right;
+}
+
+/* ==============================
+   RANKING DAS CLASSES
+   ============================== */
+
+.ranking-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+.ranking-item{
+    display:flex;
+    align-items:flex-start;
+    gap:18px;
+
+    background:#f7f2ea;
+    border:1px solid #e5ddd2;
+    border-radius:16px;
+
+    padding:18px 20px;
+
+    transition:.2s ease;
+}
+
+.ranking-item:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+
+/* POSIÇÃO */
+
+.ranking-posicao{
+    width:45px;
+    min-width:45px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:25px;
+    font-weight:bold;
+
+    padding-top:2px;
+}
+
+
+/* ÁREA PRINCIPAL */
+
+.ranking-info{
+    flex:1;
+    min-width:0;
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+
+/* NOME DA CLASSE */
+
+.ranking-info > strong{
+    font-size:19px;
+    color:#2f241d;
+}
+
+
+/* DADOS */
+
+.ranking-dados{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
+
+    gap:9px;
+}
+
+
+/* CADA INFORMAÇÃO */
+
+.ranking-dados span{
+    display:flex;
+    align-items:center;
+
+    background:white;
+
+    border:1px solid #ebe4da;
+    border-radius:10px;
+
+    padding:9px 11px;
+
+    font-size:13px;
+    color:#5f5146;
+
+    box-sizing:border-box;
+}
+
+
+/* NÚMERO/PORCENTAGEM EM DESTAQUE */
+
+.ranking-dados span strong{
+    margin-left:4px;
+
+    color:#8b6a4e;
+    font-size:13px;
+}
+
+
+/* OFERTA */
+
+.ranking-dados span:last-child{
+    font-weight:bold;
+    color:#6b513c;
+}
+
+
+/* RESPONSIVIDADE */
+
+@media (max-width:700px){
+
+    .ranking-item{
+        gap:12px;
+        padding:15px;
+    }
+
+    .ranking-posicao{
+        width:35px;
+        min-width:35px;
+        font-size:21px;
+    }
+
+    .ranking-info > strong{
+        font-size:17px;
+    }
+
+    .ranking-dados{
+        grid-template-columns:1fr;
+    }
+
+}
+
+.botao-recalcular{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    margin-left:10px;
+
+    background:#ead7bc;
+    color:#5b4331;
+
+    border:1px solid #d8c3a5;
+    border-radius:10px;
+
+    padding:10px 16px;
+
+    font-size:14px;
+    font-weight:bold;
+
+    text-decoration:none;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+}
+
+.botao-recalcular:hover{
+    background:#d8c3a5;
+    transform:translateY(-2px);
+    box-shadow:0 4px 10px rgba(80,55,35,.10);
+}
+
+.botao-recalcular:active{
+    transform:translateY(0);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topo">
+
+        <h1>
+            📊 Relatório Mensal - EBD
+        </h1>
+
+        <p>
+            {{ "%02d"|format(mes) }}/{{ ano }}
+        </p>
+
+        <a href="/" class="voltar">
+            ← Voltar
+        </a>
+
+        <a href="{{ request.url }}" class="botao-recalcular">
+            🔄 Recalcular
+        </a>
+
+    </div>
+
+
+    {% set totais = namespace(
+    matriculados=0,
+    presentes=0,
+    ausentes=0,
+    visitantes=0,
+    assistencias=0
+) %}
+
+{% for classe in estatisticas_classes %}
+
+    {% set totais.matriculados = totais.matriculados + classe.matriculados %}
+    {% set totais.presentes = totais.presentes + classe.presentes %}
+    {% set totais.ausentes = totais.ausentes + classe.ausentes %}
+    {% set totais.visitantes = totais.visitantes + classe.visitantes %}
+    {% set totais.assistencias = totais.assistencias + classe.assistencias %}
+
+{% endfor %}
+
+<div class="cards">
+
+    <div class="card">
+        <h3>👥 Matriculados</h3>
+        <strong>
+            {{ totais.matriculados }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>✅ Presentes</h3>
+        <strong>
+            {{ totais.presentes }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>❌ Ausentes</h3>
+        <strong>
+            {{ totais.ausentes }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>👤 Visitantes</h3>
+        <strong>
+            {{ totais.visitantes }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>📊 Assistências</h3>
+        <strong>
+            {{ totais.assistencias }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>📖 Bíblias</h3>
+        <strong>
+            {{ total_biblias }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>📘 Revistas</h3>
+        <strong>
+            {{ total_revistas }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>💰 Ofertas</h3>
+        <strong>
+            R$ {{ "%.2f"|format(total_ofertas) }}
+        </strong>
+    </div>
+
+    <div class="card">
+        <h3>🏫 Classes</h3>
+        <strong>
+            {{ total_classes }}
+        </strong>
+    </div>
+
+</div>
+
+    <div class="bloco">
+
+        <h2>
+            📝 Resumo por Classe
+        </h2>
+
+    <table class="tabela-resumo">
+
+        <tr>
+            <th>Classe</th>
+            <th>Bíblias</th>
+            <th>Revistas</th>
+            <th>Ofertas</th>
+        </tr>
+
+        {% for nome, ofertas, biblias, revistas in resumo_classes %}
+
+        <tr>
+
+            <td>
+                {{ nome }}
+            </td>
+
+            <td class="quantidade">
+                {{ biblias or 0 }}
+            </td>
+
+            <td class="quantidade">
+                {{ revistas or 0 }}
+            </td>
+
+            <td class="valor">
+                R$ {{ "%.2f"|format(ofertas or 0) }}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+<div class="bloco">
+
+    <h2>
+        🏆 Ranking das Classes
+    </h2>
+
+    {% if estatisticas_classes %}
+
+        <div class="ranking-list">
+
+            {% for classe in estatisticas_classes %}
+
+
+                <div class="ranking-item">
+
+                    <div class="ranking-posicao">
+
+                        {% if loop.index == 1 %}
+                            🥇
+                        {% elif loop.index == 2 %}
+                            🥈
+                        {% elif loop.index == 3 %}
+                            🥉
+                        {% else %}
+                            {{ loop.index }}º
+                        {% endif %}
+
+                    </div>
+
+                    <div class="ranking-info">
+
+                        <strong>
+                            {{ classe.classe }}
+                        </strong>
+
+                        <div class="ranking-dados">
+
+                            <span>
+                                👥 Matriculados:
+                                {{ classe.matriculados }}
+                            </span>
+
+                            <span>
+                                ✅ Presentes:
+                                {{ classe.presentes }}
+                            </span>
+
+                            <span>
+                                ❌ Ausentes:
+                                {{ classe.ausentes }}
+                            </span>
+
+                            <span>
+                                👤 Visitantes:
+                                {{ classe.visitantes }}
+                            </span>
+
+                            <span>
+                                📊 Assistências:
+                                {{ classe.assistencias }}
+                            </span>
+
+                            <span>
+                                📖 Bíblias:
+                                {{ classe.biblias }}
+                            </span>
+
+                            <span>
+                                📘 Revistas:
+                                {{ classe.revistas }}
+                            </span>
+
+                            <span>
+                                💰 Ofertas:
+                                R$ {{ "%.2f"|format(classe.ofertas) }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>
+            Ainda não existem registros para este período.
+        </p>
+
+    {% endif %}
+
+</div> 
+
+    <div class="bloco">
+
+        <h2>
+            💰 Ofertas por Domingo
+        </h2>
+
+        <table>
+
+            <tr>
+                <th>Data</th>
+                <th>Oferta</th>
+            </tr>
+
+            {% for data, valor in ofertas %}
+
+            <tr>
+
+                <td>
+    {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
+                </td>
+
+                <td class="valor">
+                    R$ {{ "%.2f"|format(valor or 0) }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            <tr class="total">
+
+                <td>
+                    TOTAL DO MÊS
+                </td>
+
+                <td class="valor">
+                    R$ {{ "%.2f"|format(total_ofertas) }}
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

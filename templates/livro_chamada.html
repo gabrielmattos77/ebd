@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Livro de Chamada</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f5f5;
+    color:#000;
+}
+
+.topo{
+    background:#fff;
+    border-bottom:2px solid #000;
+    padding:15px;
+    text-align:center;
+}
+
+.topo h1{
+    margin:0;
+    font-size:28px;
+}
+
+.topo p{
+    margin:5px 0 0;
+}
+
+.container{
+    padding:20px;
+}
+
+.info{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.campo{
+    background:white;
+    border:1px solid #000;
+    padding:10px;
+}
+
+.tabela{
+    overflow:auto;
+    background:white;
+    border:1px solid #000;
+}
+
+table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:2200px;
+}
+
+th,td{
+    border:1px solid #000;
+    text-align:center;
+    padding:3px;
+    height:28px;
+}
+
+.nome{
+    min-width:260px;
+    text-align:left;
+    padding-left:8px;
+}
+
+.numero{
+    width:50px;
+}
+
+.trimestre{
+    background:#dcdcdc;
+    font-weight:bold;
+}
+
+.domingo{
+    width:35px;
+    background:#f3f3f3;
+}
+
+.presenca{
+    width:35px;
+}
+
+.rodape{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+
+.card{
+    border:1px solid #000;
+    background:white;
+    padding:15px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.voltar{
+    display:inline-block;
+    margin-top:20px;
+    padding:10px 20px;
+    text-decoration:none;
+    border:1px solid #000;
+    background:white;
+    color:black;
+}
+
+</style>
+</head>
+<body>
+
+<div class="topo">
+    <h1>📖 LIVRO DE CHAMADA EBD</h1>
+    <p>Registro Geral de Frequência</p>
+</div>
+
+<div class="container">
+
+<div class="info">
+
+<div class="campo">
+    Classe: ___________________
+</div>
+
+<div class="campo">
+    Professor: ___________________
+</div>
+
+<div class="campo">
+    Ano: 2026
+</div>
+
+<div class="campo">
+    Trimestre: Todos
+</div>
+
+</div>
+
+<div class="tabela">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th rowspan="2" class="numero">Nº</th>
+
+<th rowspan="2" class="nome">
+Aluno
+</th>
+
+<th colspan="13" class="trimestre">
+1º TRIMESTRE
+</th>
+
+<th colspan="13" class="trimestre">
+2º TRIMESTRE
+</th>
+
+<th colspan="13" class="trimestre">
+3º TRIMESTRE
+</th>
+
+<th colspan="13" class="trimestre">
+4º TRIMESTRE
+</th>
+
+</tr>
+
+<tr>
+
+{% for i in range(1,53) %}
+<th class="domingo">{{ i }}</th>
+{% endfor %}
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for i in range(1,41) %}
+
+<tr>
+
+<td>{{ i }}</td>
+
+<td class="nome">
+Aluno {{ i }}
+</td>
+
+{% for j in range(1,53) %}
+<td class="presenca"></td>
+{% endfor %}
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="rodape">
+
+<div class="card">
+Matriculados
+</div>
+
+<div class="card">
+Presentes
+</div>
+
+<div class="card">
+Visitantes
+</div>
+
+<div class="card">
+Bíblias
+</div>
+
+<div class="card">
+Ofertas
+</div>
+
+</div>
+
+<a href="/" class="voltar">
+← Voltar
+</a>
+
+</div>
+
+</body>
+</html>

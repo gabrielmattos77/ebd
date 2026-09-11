@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Visitantes — Controle da EBD</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f1e8;
+            color: #222;
+        }
+
+        .pagina {
+            padding: 25px;
+        }
+
+        .cabecalho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .voltar {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .filtros {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .filtro {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .filtro label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        select,
+        input {
+            padding: 9px;
+            min-width: 220px;
+        }
+
+        .folha {
+            background: #fffdf4;
+            border: 1px solid #999;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .titulo {
+            text-align: center;
+            padding: 15px;
+            border-bottom: 2px solid #555;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        form {
+            padding: 20px;
+        }
+
+        .campo {
+            margin-bottom: 15px;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .campo input {
+            width: 100%;
+        }
+
+        .botao {
+            border: none;
+            padding: 12px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .salvar {
+            background: #1769aa;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #777;
+            padding: 10px;
+        }
+
+        th {
+            background: #e8e4d5;
+            text-align: left;
+        }
+
+        .numero {
+            width: 70px;
+            text-align: center;
+        }
+
+        .aviso {
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #e0c56e;
+            border-radius: 7px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="pagina">
+
+    <div class="cabecalho">
+
+        <h1>👤 Visitantes da EBD</h1>
+
+        <a class="voltar" href="/">
+            ← Voltar
+        </a>
+
+    </div>
+
+
+    <div class="filtros">
+
+        <div class="filtro">
+
+            <label>Domingo</label>
+
+            <select
+                onchange="location.href='/visitantes?domingo_id=' + this.value + '&classe_id={{ classe_id or '' }}'"
+            >
+
+                <option value="">
+                    Selecione o domingo
+                </option>
+
+                {% for id_domingo, data, nao_teve_aula in domingos %}
+
+                    <option
+                        value="{{ id_domingo }}"
+                        {% if domingo_id and domingo_id|int == id_domingo %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <div class="filtro">
+
+            <label>Classe</label>
+
+            <select
+                onchange="location.href='/visitantes?classe_id=' + this.value + '&domingo_id={{ domingo_id or '' }}'"
+            >
+
+                <option value="">
+                    Selecione a classe
+                </option>
+
+                {% for id_classe, nome in classes %}
+
+                    <option
+                        value="{{ id_classe }}"
+                        {% if classe_id and classe_id|int == id_classe %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ nome }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    {% if domingo_id and classe_id %}
+
+        <div class="folha">
+
+            <div class="titulo">
+                CADASTRAR VISITANTE
+            </div>
+
+            <form method="POST">
+
+                <input
+                    type="hidden"
+                    name="domingo_id"
+                    value="{{ domingo_id }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="classe_id"
+                    value="{{ classe_id }}"
+                >
+
+                <div class="campo">
+
+                    <label>Nome</label>
+
+                    <input
+                        type="text"
+                        name="nome"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="campo">
+
+                    <label>Identificação</label>
+
+                    <input
+                        type="text"
+                        name="identificacao"
+                        placeholder="Ex.: pai da Ana"
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="botao salvar"
+                >
+                    💾 Cadastrar visitante
+                </button>
+
+            </form>
+
+
+            <div class="titulo">
+                VISITANTES CADASTRADOS
+            </div>
+
+
+            {% if visitantes %}
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th class="numero">Nº</th>
+                            <th>Nome</th>
+                            <th>Identificação</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for visitante in visitantes %}
+
+                            <tr>
+
+                                <td class="numero">
+                                    {{ "%02d"|format(loop.index) }}
+                                </td>
+
+                                <td>
+                                    {{ visitante[1] }}
+                                </td>
+
+                                <td>
+                                    {{ visitante[2] or "—" }}
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% else %}
+
+                <div class="aviso">
+                    Nenhum visitante cadastrado para esta chamada.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div class="aviso">
+            Selecione um domingo e uma classe para cadastrar visitantes.
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>
