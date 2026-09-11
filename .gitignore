@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+
+*.backup
+*.backup*
+*.bak
+*.bkp
+*.txt
+
+*.db.backup*
+*.zip
+*.bkp_visual
