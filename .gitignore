@@ -7,7 +7,13 @@ __pycache__/
 *.bak
 *.bkp
 *.txt
-
+*.db
 *.db.backup*
 *.zip
+
+.python-version
+
+app.py.erro-antes-correcao
+banco_backup_relatorio.py
+chamada_parte_*
 *.bkp_visual
