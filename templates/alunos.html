@@ -992,6 +992,28 @@ button.motivo-selecionado {
 
             </select>
 
+            <label>Domingo de início</label>
+
+            <select name="domingo_id" required>
+
+                <option value="">
+                    Selecione o domingo
+                </option>
+
+                {% for id_domingo, data, sem_aula in domingos %}
+
+                    {% if not sem_aula %}
+
+                        <option value="{{ id_domingo }}">
+                            {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
+                        </option>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </select>
+
             <button type="submit">
                 Cadastrar aluno
             </button>

@@ -153,6 +153,44 @@ def criar_banco():
         )
     """)
 
+    cursor.execute("""
+        PRAGMA table_info(registros_classe)
+    """)
+
+    colunas_registros = [
+        coluna[1]
+        for coluna in cursor.fetchall()
+    ]
+
+    if "matriculados" not in colunas_registros:
+        cursor.execute("""
+            ALTER TABLE registros_classe
+            ADD COLUMN matriculados INTEGER NOT NULL DEFAULT 0
+        """)
+
+    if "presentes" not in colunas_registros:
+        cursor.execute("""
+            ALTER TABLE registros_classe
+            ADD COLUMN presentes INTEGER NOT NULL DEFAULT 0
+        """)
+
+    if "ausentes" not in colunas_registros:
+        cursor.execute("""
+            ALTER TABLE registros_classe
+            ADD COLUMN ausentes INTEGER NOT NULL DEFAULT 0
+        """)
+
+    if "visitantes" not in colunas_registros:
+        cursor.execute("""
+            ALTER TABLE registros_classe
+            ADD COLUMN visitantes INTEGER NOT NULL DEFAULT 0
+        """)
+
+    if "assistencias" not in colunas_registros:
+        cursor.execute("""
+            ALTER TABLE registros_classe
+            ADD COLUMN assistencias INTEGER NOT NULL DEFAULT 0
+        """)
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS visitantes (
@@ -276,18 +314,7 @@ def listar_alunos_por_classe(classe_id):
             alunos.nome,
             alunos.ativo,
             alunos.identificacao,
-            matriculas.data_inicio,
-
-            (
-                SELECT historico.motivo_fim
-                FROM matriculas AS historico
-                WHERE historico.aluno_id = alunos.id
-                  AND historico.data_fim IS NOT NULL
-                  AND historico.motivo_fim IS NOT NULL
-                  AND TRIM(historico.motivo_fim) != ''
-                ORDER BY historico.data_fim DESC
-                LIMIT 1
-            ) AS ultimo_motivo
+            matriculas.data_inicio
 
         FROM alunos
 
@@ -317,24 +344,10 @@ def listar_alunos_por_classe_no_domingo(classe_id, data_domingo):
             alunos.nome,
             alunos.ativo,
             alunos.identificacao,
-            matriculas.data_inicio,
-
-            (
-                SELECT historico.motivo_fim
-                FROM matriculas AS historico
-                WHERE historico.aluno_id = alunos.id
-                  AND historico.data_fim IS NOT NULL
-                  AND historico.motivo_fim IS NOT NULL
-                  AND TRIM(historico.motivo_fim) != ''
-                ORDER BY historico.data_fim DESC
-                LIMIT 1
-            ) AS ultimo_motivo
-
+            matriculas.data_inicio
         FROM alunos
-
         INNER JOIN matriculas
             ON alunos.id = matriculas.aluno_id
-
         WHERE matriculas.classe_id = ?
           AND matriculas.data_inicio <= ?
           AND (
@@ -342,15 +355,19 @@ def listar_alunos_por_classe_no_domingo(classe_id, data_domingo):
               OR matriculas.data_fim > ?
           )
           AND alunos.ativo = 1
-
         ORDER BY alunos.nome
-    """, (classe_id, data_domingo, data_domingo))
+    """, (
+        classe_id,
+        data_domingo,
+        data_domingo
+    ))
 
     alunos = cursor.fetchall()
 
     conexao.close()
 
     return alunos
+
 
 def listar_alunos_historico_classe(classe_id):
 
@@ -364,7 +381,6 @@ def listar_alunos_historico_classe(classe_id):
             alunos.identificacao,
             matriculas.data_inicio,
             matriculas.data_fim,
-            matriculas.motivo_fim,
 
             classe_anterior.nome,
 
@@ -416,17 +432,16 @@ def mudar_aluno_de_classe(aluno_id, nova_classe_id, data_inicio, motivo):
     # Encerra a matrícula atual
     cursor.execute("""
         UPDATE matriculas
-            SET data_fim = ?,
-            motivo_fim = ?
-            WHERE aluno_id = ?
-            AND data_fim IS NULL
+        SET data_fim = ?
+        WHERE aluno_id = ?
+          AND data_fim IS NULL
     """, (
         data_inicio,
-        motivo,
         aluno_id
     ))
 
     # Cria a nova matrícula
+
     cursor.execute("""
         INSERT INTO matriculas (
             aluno_id,
@@ -617,7 +632,7 @@ def obter_status_aluno(aluno_id):
 
             if (
                 status == "matriculado"
-                and ausencias_consecutivas >= 4
+                and ausencias_consecutivas >= 3
             ):
                 status = "visitante"
 
@@ -814,7 +829,18 @@ def obter_frequencia(aluno_id, domingo_id):
     return resultado[0]
 
 
-def registrar_registro_classe(domingo_id, classe_id, biblias, revistas, oferta):
+def registrar_registro_classe(
+    domingo_id,
+    classe_id,
+    biblias,
+    revistas,
+    oferta,
+    matriculados,
+    presentes,
+    ausentes,
+    visitantes,
+    assistencias
+):
     conexao = conectar()
     cursor = conexao.cursor()
 
@@ -832,13 +858,23 @@ def registrar_registro_classe(domingo_id, classe_id, biblias, revistas, oferta):
             UPDATE registros_classe
             SET biblias = ?,
                 revistas = ?,
-                oferta = ?
+                oferta = ?,
+                matriculados = ?,
+                presentes = ?,
+                ausentes = ?,
+                visitantes = ?,
+                assistencias = ?
             WHERE domingo_id = ?
               AND classe_id = ?
         """, (
             biblias,
             revistas,
             oferta,
+            matriculados,
+            presentes,
+            ausentes,
+            visitantes,
+            assistencias,
             domingo_id,
             classe_id
         ))
@@ -849,15 +885,25 @@ def registrar_registro_classe(domingo_id, classe_id, biblias, revistas, oferta):
                 classe_id,
                 biblias,
                 revistas,
-                oferta
+                oferta,
+                matriculados,
+                presentes,
+                ausentes,
+                visitantes,
+                assistencias
             )
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             domingo_id,
             classe_id,
             biblias,
             revistas,
-            oferta
+            oferta,
+            matriculados,
+            presentes,
+            ausentes,
+            visitantes,
+            assistencias
         ))
 
     conexao.commit()
@@ -869,11 +915,22 @@ def obter_registro_classe(domingo_id, classe_id):
     cursor = conexao.cursor()
 
     cursor.execute("""
-        SELECT biblias, revistas, oferta
+        SELECT
+            biblias,
+            revistas,
+            oferta,
+            matriculados,
+            presentes,
+            ausentes,
+            visitantes,
+            assistencias
         FROM registros_classe
         WHERE domingo_id = ?
           AND classe_id = ?
-    """, (domingo_id, classe_id))
+    """, (
+        domingo_id,
+        classe_id
+    ))
 
     resultado = cursor.fetchone()
 
@@ -883,13 +940,23 @@ def obter_registro_classe(domingo_id, classe_id):
         return {
             "biblias": 0,
             "revistas": 0,
-            "oferta": 0
+            "oferta": 0,
+            "matriculados": 0,
+            "presentes": 0,
+            "ausentes": 0,
+            "visitantes": 0,
+            "assistencias": 0
         }
 
     return {
         "biblias": resultado[0],
         "revistas": resultado[1],
-        "oferta": resultado[2]
+        "oferta": resultado[2],
+        "matriculados": resultado[3],
+        "presentes": resultado[4],
+        "ausentes": resultado[5],
+        "visitantes": resultado[6],
+        "assistencias": resultado[7]
     }
 
 def obter_ofertas_mes(ano, mes):
@@ -962,6 +1029,10 @@ def obter_estatisticas_mes_por_classe(ano, mes):
     conexao = conectar()
     cursor = conexao.cursor()
 
+    # -------------------------------------------------
+    # TODAS AS CLASSES
+    # -------------------------------------------------
+
     cursor.execute("""
         SELECT id, nome
         FROM classes
@@ -972,126 +1043,81 @@ def obter_estatisticas_mes_por_classe(ano, mes):
 
     resultado = []
 
+    # -------------------------------------------------
+    # DOMINGOS DO MÊS
+    # -------------------------------------------------
+
+    cursor.execute("""
+        SELECT id, data
+        FROM domingos
+        WHERE strftime('%Y', data) = ?
+          AND strftime('%m', data) = ?
+        ORDER BY data
+    """, (
+        str(ano),
+        f"{mes:02d}"
+    ))
+
+    domingos = cursor.fetchall()
+
+    # -------------------------------------------------
+    # CADA CLASSE
+    # -------------------------------------------------
+
     for classe_id, nome_classe in classes:
 
-        # -------------------------------------------------
-        # ALUNOS DA CLASSE
-        # -------------------------------------------------
-
-        cursor.execute("""
-            SELECT alunos.id
-            FROM alunos
-            INNER JOIN matriculas
-                ON alunos.id = matriculas.aluno_id
-            WHERE matriculas.classe_id = ?
-              AND matriculas.data_fim IS NULL
-              AND alunos.ativo = 1
-        """, (classe_id,))
-
-        alunos = cursor.fetchall()
-
-        matriculados = len(alunos)
-
+        matriculados = 0
         presentes = 0
         ausentes = 0
+        visitantes = 0
+        assistencias = 0
+        biblias = 0
+        revistas = 0
+        ofertas = 0
 
         # -------------------------------------------------
-        # DOMINGOS DO MÊS
+        # CADA DOMINGO É UM REGISTRO INDEPENDENTE
         # -------------------------------------------------
 
-        cursor.execute("""
-            SELECT id
-            FROM domingos
-            WHERE strftime('%Y', data) = ?
-              AND strftime('%m', data) = ?
-            ORDER BY data
-        """, (
-            str(ano),
-            f"{mes:02d}"
-        ))
+        for domingo_id, data_domingo in domingos:
 
-        domingos = cursor.fetchall()
+            cursor.execute("""
+                SELECT
+                    matriculados,
+                    presentes,
+                    ausentes,
+                    visitantes,
+                    assistencias,
+                    biblias,
+                    revistas,
+                    oferta
+                FROM registros_classe
+                WHERE domingo_id = ?
+                  AND classe_id = ?
+            """, (
+                domingo_id,
+                classe_id
+            ))
 
-        # -------------------------------------------------
-        # PRESENÇAS / AUSÊNCIAS
-        # -------------------------------------------------
+            registro = cursor.fetchone()
 
-        for (aluno_id,) in alunos:
+            # Se não houve registro da chamada,
+            # não inventa números para esse domingo.
+            if registro is None:
+                continue
 
-            for (domingo_id,) in domingos:
-
-                cursor.execute("""
-                    SELECT presente
-                    FROM chamadas
-                    WHERE domingo_id = ?
-                      AND aluno_id = ?
-                """, (
-                    domingo_id,
-                    aluno_id
-                ))
-
-                registro = cursor.fetchone()
-
-                if registro:
-
-                    if registro[0] == 1:
-                        presentes += 1
-
-                    elif registro[0] == 0:
-                        ausentes += 1
+            matriculados += registro[0] or 0
+            presentes += registro[1] or 0
+            ausentes += registro[2] or 0
+            visitantes += registro[3] or 0
+            assistencias += registro[4] or 0
+            biblias += registro[5] or 0
+            revistas += registro[6] or 0
+            ofertas += registro[7] or 0
 
         # -------------------------------------------------
-        # VISITANTES
+        # RESULTADO DA CLASSE
         # -------------------------------------------------
-
-        cursor.execute("""
-            SELECT COUNT(*)
-            FROM visitantes
-            INNER JOIN domingos
-                ON domingos.id = visitantes.domingo_id
-            WHERE visitantes.classe_id = ?
-              AND strftime('%Y', domingos.data) = ?
-              AND strftime('%m', domingos.data) = ?
-        """, (
-            classe_id,
-            str(ano),
-            f"{mes:02d}"
-        ))
-
-        visitantes = cursor.fetchone()[0] or 0
-
-        # -------------------------------------------------
-        # BÍBLIAS, REVISTAS E OFERTAS
-        # -------------------------------------------------
-
-        cursor.execute("""
-            SELECT
-                SUM(registros_classe.biblias),
-                SUM(registros_classe.revistas),
-                SUM(registros_classe.oferta)
-            FROM registros_classe
-            INNER JOIN domingos
-                ON domingos.id = registros_classe.domingo_id
-            WHERE registros_classe.classe_id = ?
-              AND strftime('%Y', domingos.data) = ?
-              AND strftime('%m', domingos.data) = ?
-        """, (
-            classe_id,
-            str(ano),
-            f"{mes:02d}"
-        ))
-
-        dados = cursor.fetchone()
-
-        biblias = dados[0] or 0
-        revistas = dados[1] or 0
-        ofertas = dados[2] or 0
-
-        # -------------------------------------------------
-        # ASSISTÊNCIAS
-        # -------------------------------------------------
-
-        assistencias = presentes + visitantes
 
         resultado.append({
             "classe": nome_classe,
@@ -1107,15 +1133,21 @@ def obter_estatisticas_mes_por_classe(ano, mes):
 
     conexao.close()
 
+    # -------------------------------------------------
+    # ORDENAÇÃO
+    # -------------------------------------------------
+
     resultado.sort(
-    key=lambda classe: (
-        classe["presentes"],
-        classe["assistencias"],
-        classe["matriculados"]
-    ),
-    reverse=True
-)
+        key=lambda classe: (
+            classe["presentes"],
+            classe["assistencias"],
+            classe["matriculados"]
+        ),
+        reverse=True
+    )
+
     return resultado
+
 
 def obter_estatisticas_trimestre_por_classe(ano, tri):
 

@@ -2,12 +2,15 @@
 <html lang="pt-BR">
 
 <head>
+
+     <link rel="manifest" href="{{ url_for('manifest') }}">
+     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/ebd-logo.png') }}">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Controle da EBD</title>
 
-    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#6b4f35">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">

@@ -1524,14 +1524,15 @@ table {
 
                 {% for id_domingo, data, nao_teve_aula in domingos %}
 
-                    <option
-                        value="{{ id_domingo }}"
-                        {% if domingo_id|int == id_domingo %}selected{% endif %}
-                    >
-                        {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
-                    </option>
+<option
+    value="{{ id_domingo }}"
+    {% if domingo_id|int == id_domingo %}selected{% endif %}
+>
+    {{ data[8:10] }}/{{ data[5:7] }}/{{ data[0:4] }}
+    {% if nao_teve_aula %} — 🚫 SEM AULA{% endif %}
+</option>
 
-                {% endfor %}
+{% endfor %}
 
             </select>
 
@@ -2165,96 +2166,129 @@ table {
     namespace(total=resumo_chamada.visitantes)
 %}
 
-                        <!-- MATRICULADOS -->
+<!-- MATRICULADOS -->
 
-                        <tr>
+<tr>
 
-                            <td
-                                colspan="2"
-                                class="estatistica"
-                            >
-                                ALUNOS MATRICULADOS
-                            </td>
+    <td
+        colspan="2"
+        class="estatistica"
+    >
+        ALUNOS MATRICULADOS
+    </td>
 
-                            <td colspan="100%">
-                                {{ matriculados.total }}
-                            </td>
+    <td colspan="100%">
 
-                        </tr>
+        <input
+            type="number"
+            name="matriculados"
+            min="0"
+            value="{{ resumo_chamada.matriculados }}"
+        >
 
+    </td>
 
-
-                        <!-- PRESENTES -->
-
-                        <tr>
-
-                            <td
-                                colspan="2"
-                                class="estatistica"
-                            >
-                                PRESENTES
-                            </td>
-
-                            <td colspan="100%">
-                                {{ presentes.total }}
-                            </td>
-
-                        </tr>
+</tr>
 
 
+<!-- PRESENTES -->
 
-                        <!-- AUSENTES -->
+<tr>
 
-                        <tr>
+    <td
+        colspan="2"
+        class="estatistica"
+    >
+        PRESENTES
+    </td>
 
-                            <td
-                                colspan="2"
-                                class="estatistica"
-                            >
-                                AUSENTES
-                            </td>
+    <td colspan="100%">
 
-                            <td colspan="100%">
-                                {{ ausentes.total }}
-                            </td>
+        <input
+            type="number"
+            name="presentes"
+            min="0"
+            value="{{ resumo_chamada.presentes }}"
+        >
 
-                        </tr>
+    </td>
+
+</tr>
 
 
+<!-- AUSENTES -->
 
-                        <!-- VISITANTES -->
+<tr>
 
-                        <tr>
+    <td
+        colspan="2"
+        class="estatistica"
+    >
+        AUSENTES
+    </td>
 
-                            <td
-                                colspan="2"
-                                class="estatistica"
-                            >
-                                VISITANTES
-                            </td>
+    <td colspan="100%">
 
-                            <td colspan="100%">
-                                {{ visitantes.total }}
-                            </td>
+        <input
+            type="number"
+            name="ausentes"
+            min="0"
+            value="{{ resumo_chamada.ausentes }}"
+        >
 
-                        </tr>
+    </td>
 
-                        <!-- ASSISTÊNCIAS -->
+</tr>
 
-                        <tr>
 
-                            <td
-                                colspan="2"
-                                class="estatistica"
-                            >
-                                ASSISTÊNCIAS
-                            </td>
+<!-- VISITANTES -->
 
-                            <td colspan="100%">
-                                {{ resumo_chamada.assistencias }}
-                            </td>
+<tr>
 
-                        </tr>
+    <td
+        colspan="2"
+        class="estatistica"
+    >
+        VISITANTES
+    </td>
+
+    <td colspan="100%">
+
+        <input
+            type="number"
+            name="visitantes"
+            min="0"
+            value="{{ resumo_chamada.visitantes }}"
+        >
+
+    </td>
+
+</tr>
+
+
+<!-- ASSISTÊNCIAS -->
+
+<tr>
+
+    <td
+        colspan="2"
+        class="estatistica"
+    >
+        ASSISTÊNCIAS
+    </td>
+
+    <td colspan="100%">
+
+        <input
+            type="number"
+            name="assistencias"
+            min="0"
+            value="{{ resumo_chamada.assistencias }}"
+        >
+
+    </td>
+
+</tr>
                       
                         <!-- BÍBLIAS -->
 

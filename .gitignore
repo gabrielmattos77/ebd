@@ -17,3 +17,9 @@ app.py.erro-antes-correcao
 banco_backup_relatorio.py
 chamada_parte_*
 *.bkp_visual
+
+# Backups locais do projeto
+app_backup_*
+banco_backup_*
+chamada_backup_*
+backups/

@@ -51,7 +51,7 @@ def inicio():
 
     domingos_por_mes = {}
 
-    for id_domingo, data, nao_teve_aula in domingos:
+    for id_domingo, data, sem_aula in domingos:
         ano = data[0:4]
         mes = data[5:7]
 
@@ -122,7 +122,8 @@ def chamada():
 
     domingos_por_mes = {}
 
-    for id_domingo, data, nao_teve_aula in domingos:
+    for id_domingo, data, sem_aula in domingos:
+
         ano = data[0:4]
         mes = data[5:7]
 
@@ -132,8 +133,12 @@ def chamada():
             domingos_por_mes[chave_mes] = []
 
         domingos_por_mes[chave_mes].append(
-            (id_domingo, data, nao_teve_aula)
+            (id_domingo, data, sem_aula)
         )
+
+    # -----------------------------------------
+    # POST — SALVAR CHAMADA
+    # -----------------------------------------
 
     if request.method == "POST":
 
@@ -142,84 +147,182 @@ def chamada():
 
         if classe_id and domingo_id:
 
-            alunos = listar_alunos_por_classe(
-                int(classe_id)
-            )
+            data_domingo = None
 
-            for aluno in alunos:
+            for id_domingo, data, sem_aula in domingos:
 
-                aluno_id = aluno[0]
+                if id_domingo == int(domingo_id):
 
-                resposta = request.form.get(
-                    f"aluno_{aluno_id}_{domingo_id}"
+                    data_domingo = data
+                    break
+
+            if data_domingo:
+
+                alunos_post = listar_alunos_por_classe_no_domingo(
+                    int(classe_id),
+                    data_domingo
                 )
 
-                if resposta in ("P", "A"):
+                for aluno in alunos_post:
 
-                    presente = 1 if resposta == "P" else 0
+                    aluno_id = aluno[0]
 
-                    registrar_frequencia(
-                        int(domingo_id),
-                        aluno_id,
-                        presente
+                    resposta = request.form.get(
+                        f"aluno_{aluno_id}_{domingo_id}"
                     )
 
-            biblias = request.form.get("biblias", "0")
-            revistas = request.form.get("revistas", "0")
-            oferta = request.form.get("oferta", "0")
+                    if resposta in ("P", "A"):
 
-            try:
-                biblias = int(biblias)
-            except ValueError:
-                biblias = 0
+                        presente = 1 if resposta == "P" else 0
 
-            try:
-                revistas = int(revistas)
-            except ValueError:
-                revistas = 0
+                        registrar_frequencia(
+                            int(domingo_id),
+                            aluno_id,
+                            presente
+                        )
 
-            try:
-                oferta = float(
-                    oferta.replace(",", ".")
+                matriculados = request.form.get("matriculados", "0")
+                presentes = request.form.get("presentes", "0")
+                ausentes = request.form.get("ausentes", "0")
+                visitantes = request.form.get("visitantes", "0")
+                assistencias = request.form.get("assistencias", "0")
+
+                biblias = request.form.get("biblias", "0")
+                revistas = request.form.get("revistas", "0")
+                oferta = request.form.get("oferta", "0")
+
+                try:
+                    matriculados = int(matriculados)
+                except ValueError:
+                    matriculados = 0
+
+                try:
+                    presentes = int(presentes)
+                except ValueError:
+                    presentes = 0
+
+                try:
+                    ausentes = int(ausentes)
+                except ValueError:
+                    ausentes = 0
+
+                try:
+                    visitantes = int(visitantes)
+                except ValueError:
+                    visitantes = 0
+
+                try:
+                    assistencias = int(assistencias)
+                except ValueError:
+                    assistencias = presentes + visitantes
+
+                try:
+                    biblias = int(biblias)
+                except ValueError:
+                    biblias = 0
+
+                try:
+                    revistas = int(revistas)
+                except ValueError:
+                    revistas = 0
+
+                try:
+                    oferta = float(
+                        oferta.replace(",", ".")
+                    )
+                except ValueError:
+                    oferta = 0
+
+                registrar_registro_classe(
+                    int(domingo_id),
+                    int(classe_id),
+                    biblias,
+                    revistas,
+                    oferta,
+                    matriculados,
+                    presentes,
+                    ausentes,
+                    visitantes,
+                    assistencias
                 )
-            except ValueError:
-                oferta = 0
 
-            registrar_registro_classe(
-                int(domingo_id),
-                int(classe_id),
-                biblias,
-                revistas,
-                oferta
-            )
-
-            return redirect(
-                url_for(
-                    "chamada",
-                    domingo_id=domingo_id,
-                    classe_id=classe_id,
-                    salvo="1"
+                return redirect(
+                    url_for(
+                        "chamada",
+                        domingo_id=domingo_id,
+                        classe_id=classe_id,
+                        salvo="1"
+                    )
                 )
-            )
+
+    # -----------------------------------------
+    # GET — SELEÇÃO
+    # -----------------------------------------
+
+        # -----------------------------------------
+    # GET — SELEÇÃO
+    # -----------------------------------------
 
     domingo_id = request.args.get("domingo_id")
     classe_id = request.args.get("classe_id")
+
+    # -----------------------------------------
+    # SE NENHUM DOMINGO FOI SELECIONADO
+    # -----------------------------------------
+
+    if not domingo_id:
+
+        for id_domingo, data, sem_aula in domingos:
+
+            if not sem_aula:
+
+                domingo_id = str(id_domingo)
+                break
+
+    # -----------------------------------------
+    # VARIÁVEIS
+    # -----------------------------------------
 
     alunos = []
     frequencias = {}
     visitantes_chamada = []
 
     domingo_selecionado = None
+    domingo_sem_aula = False
     classe_selecionada = None
+
+    # -----------------------------------------
+    # DOMINGO SELECIONADO
+    # -----------------------------------------
 
     if domingo_id:
 
-        for id_domingo, data, nao_teve_aula in domingos:
+        for id_domingo, data, sem_aula in domingos:
 
-            if id_domingo == int(domingo_id):
+            if int(id_domingo) == int(domingo_id):
 
                 domingo_selecionado = data
+                domingo_sem_aula = bool(sem_aula)
+
                 break
+
+    # -----------------------------------------
+    # CLASSE SELECIONADA
+    # -----------------------------------------
+
+    if classe_id:
+
+        for id_classe, nome in classes:
+
+            if int(id_classe) == int(classe_id):
+
+                classe_selecionada = nome
+
+                break
+
+    # -----------------------------------------
+    # ALUNOS DA CLASSE NO DOMINGO
+    # -----------------------------------------
 
     if classe_id and domingo_selecionado:
 
@@ -231,22 +334,27 @@ def chamada():
         for aluno in alunos:
 
             aluno_id = aluno[0]
+
             frequencias[aluno_id] = {}
 
             for chave_mes, domingos_mes in domingos_por_mes.items():
 
-                ano = int(chave_mes[0:4])
-                mes = int(chave_mes[5:7])
+                ano_mes = int(chave_mes[0:4])
+                mes_mes = int(chave_mes[5:7])
 
                 dados_mes = obter_frequencia_mes(
                     aluno_id,
-                    ano,
-                    mes
+                    ano_mes,
+                    mes_mes
                 )
 
                 for data, presente in dados_mes:
 
                     frequencias[aluno_id][data] = presente
+
+    # -----------------------------------------
+    # VISITANTES
+    # -----------------------------------------
 
     if domingo_id and classe_id:
 
@@ -255,23 +363,18 @@ def chamada():
             int(classe_id)
         )
 
-    if domingo_id:
+    # Visitantes
 
-        for id_domingo, data, nao_teve_aula in domingos:
+    if domingo_id and classe_id:
 
-            if id_domingo == int(domingo_id):
+        visitantes_chamada = listar_visitantes(
+            int(domingo_id),
+            int(classe_id)
+        )
 
-                domingo_selecionado = data
-                break
-
-    if classe_id:
-
-        for id_classe, nome in classes:
-
-            if id_classe == int(classe_id):
-
-                classe_selecionada = nome
-                break
+    # -----------------------------------------
+    # RESUMO
+    # -----------------------------------------
 
     salvo = request.args.get("salvo")
 
@@ -291,10 +394,6 @@ def chamada():
         domingo_id_int = int(domingo_id)
         classe_id_int = int(classe_id)
 
-        # -----------------------------------------
-        # MATRICULADOS E PRESENTES
-        # -----------------------------------------
-
         for aluno in alunos:
 
             aluno_id = aluno[0]
@@ -311,21 +410,13 @@ def chamada():
                 ).get(domingo_selecionado)
 
                 if presenca == 1:
-                    resumo_chamada["presentes"] += 1
 
-        # -----------------------------------------
-        # AUSENTES
-        # Matriculados - Presentes
-        # -----------------------------------------
+                    resumo_chamada["presentes"] += 1
 
         resumo_chamada["ausentes"] = (
             resumo_chamada["matriculados"]
             - resumo_chamada["presentes"]
         )
-
-        # -----------------------------------------
-        # VISITANTES
-        # -----------------------------------------
 
         visitantes = listar_visitantes(
             domingo_id_int,
@@ -334,32 +425,35 @@ def chamada():
 
         resumo_chamada["visitantes"] = len(visitantes)
 
-        # -----------------------------------------
-        # ASSISTÊNCIAS
-        # Presentes + Visitantes
-        # -----------------------------------------
-
         resumo_chamada["assistencias"] = (
             resumo_chamada["presentes"]
             + resumo_chamada["visitantes"]
         )
 
-        resumo_chamada["assistencias"] = (
-            resumo_chamada["presentes"]
-            + resumo_chamada["visitantes"]
-        )
 
     registro_classe = {
         "biblias": 0,
         "revistas": 0,
-        "oferta": 0
+        "oferta": 0,
+        "matriculados": 0,
+        "presentes": 0,
+        "ausentes": 0,
+        "visitantes": 0,
+        "assistencias": 0
     }
 
     if domingo_id and classe_id:
+
         registro_classe = obter_registro_classe(
             int(domingo_id),
             int(classe_id)
         )
+
+    resumo_chamada["matriculados"] = registro_classe["matriculados"]
+    resumo_chamada["presentes"] = registro_classe["presentes"]
+    resumo_chamada["ausentes"] = registro_classe["ausentes"]
+    resumo_chamada["visitantes"] = registro_classe["visitantes"]
+    resumo_chamada["assistencias"] = registro_classe["assistencias"]
 
     resumo_chamada["biblias"] = registro_classe["biblias"]
     resumo_chamada["revistas"] = registro_classe["revistas"]
@@ -373,6 +467,7 @@ def chamada():
         alunos=alunos,
         visitantes_chamada=visitantes_chamada,
         domingo_selecionado=domingo_selecionado,
+        domingo_sem_aula=domingo_sem_aula,
         classe_selecionada=classe_selecionada,
         domingo_id=domingo_id,
         classe_id=classe_id,
@@ -383,10 +478,12 @@ def chamada():
         obter_status_aluno=obter_status_aluno,
     )
 
+
 @app.route("/alunos", methods=["GET", "POST"])
 def alunos():
 
     classes = listar_classes()
+    domingos = listar_domingos()
 
     if request.method == "POST":
 
@@ -397,17 +494,29 @@ def alunos():
         ).strip()
 
         classe_id = request.form.get("classe_id")
+        domingo_id = request.form.get("domingo_id")
 
-        if nome and classe_id:
+        if nome and classe_id and domingo_id:
 
-            from datetime import date
+            domingos_cadastrados = listar_domingos()
 
-            cadastrar_aluno(
-                nome,
-                identificacao,
-                int(classe_id),
-                date.today().isoformat()
-            )
+            data_inicio = None
+
+            for id_domingo, data, sem_aula in domingos_cadastrados:
+
+                if str(id_domingo) == str(domingo_id):
+
+                    data_inicio = data
+                    break
+
+            if data_inicio:
+
+                cadastrar_aluno(
+                    nome,
+                    identificacao,
+                    int(classe_id),
+                    data_inicio
+                )
 
         return redirect(
             url_for(
@@ -436,6 +545,7 @@ def alunos():
     return render_template(
         "alunos.html",
         classes=classes,
+        domingos=domingos,    
         alunos=lista_alunos,
         alunos_historico=alunos_historico,
         classe_id=classe_id
@@ -617,7 +727,7 @@ def relatorio_mes():
 
     domingos_do_mes = 0
 
-    for id_domingo, data, nao_teve_aula in domingos:
+    for id_domingo, data, sem_aula in domingos:
 
         if data.startswith(f"{ano}-{mes:02d}"):
 
@@ -687,8 +797,6 @@ def relatorio_diario():
     if domingo_atual is None:
         return redirect(url_for("relatorio_diario"))
 
-    data_atual = domingo_atual[1]
-
     # -------------------------------------------------
     # DOMINGO ANTERIOR
     # -------------------------------------------------
@@ -699,7 +807,7 @@ def relatorio_diario():
         domingo_anterior = domingos[indice_atual - 1]
 
     # -------------------------------------------------
-    # FUNÇÃO PARA MONTAR OS DADOS DE UM DOMINGO
+    # MONTA RELATÓRIO
     # -------------------------------------------------
 
     def montar_relatorio(id_domingo):
@@ -719,91 +827,41 @@ def relatorio_diario():
 
         for classe_id, nome_classe in classes:
 
-            alunos = listar_alunos_por_classe(classe_id)
-
-            matriculados = 0
-            presentes = 0
-
-            # -----------------------------------------
-            # ALUNOS MATRICULADOS / PRESENTES
-            # -----------------------------------------
-
-            for aluno in alunos:
-
-                aluno_id = aluno[0]
-
-                status = obter_status_aluno(aluno_id)
-
-                if status["status"] == "matriculado":
-
-                    matriculados += 1
-
-                    presenca = obter_frequencia(
-                        aluno_id,
-                        id_domingo
-                    )
-
-                    if presenca == 1:
-                        presentes += 1
-
-            ausentes = matriculados - presentes
-
-            # -----------------------------------------
-            # VISITANTES
-            # -----------------------------------------
-
-            visitantes_lista = listar_visitantes(
-                id_domingo,
-                classe_id
-            )
-
-            visitantes = len(visitantes_lista)
-
-            # -----------------------------------------
-            # ASSISTÊNCIAS
-            # -----------------------------------------
-
-            assistencias = presentes + visitantes
-
-            # -----------------------------------------
-            # BÍBLIAS / REVISTAS / OFERTA
-            # -----------------------------------------
+            # -------------------------------------------------
+            # USA EXATAMENTE O REGISTRO SALVO PELA CHAMADA
+            # -------------------------------------------------
 
             registro = obter_registro_classe(
                 id_domingo,
                 classe_id
             )
 
-            biblias = registro["biblias"] or 0
-            revistas = registro["revistas"] or 0
-            oferta = registro["oferta"] or 0
-
             dados_classe = {
                 "nome": nome_classe,
-                "matriculados": matriculados,
-                "presentes": presentes,
-                "ausentes": ausentes,
-                "visitantes": visitantes,
-                "assistencias": assistencias,
-                "biblias": biblias,
-                "revistas": revistas,
-                "oferta": oferta
+                "matriculados": registro["matriculados"],
+                "presentes": registro["presentes"],
+                "ausentes": registro["ausentes"],
+                "visitantes": registro["visitantes"],
+                "assistencias": registro["assistencias"],
+                "biblias": registro["biblias"],
+                "revistas": registro["revistas"],
+                "oferta": registro["oferta"]
             }
 
             resultado.append(dados_classe)
 
-            # -----------------------------------------
+            # -------------------------------------------------
             # TOTAL GERAL
-            # -----------------------------------------
+            # -------------------------------------------------
 
-            total["matriculados"] += matriculados
-            total["presentes"] += presentes
-            total["ausentes"] += ausentes
-            total["visitantes"] += visitantes
-            total["assistencias"] += assistencias
-            total["biblias"] += biblias
-            total["revistas"] += revistas
-            total["oferta"] += oferta
+            total["matriculados"] += registro["matriculados"]
+            total["presentes"] += registro["presentes"]
+            total["ausentes"] += registro["ausentes"]
+            total["visitantes"] += registro["visitantes"]
+            total["assistencias"] += registro["assistencias"]
+            total["biblias"] += registro["biblias"]
+            total["revistas"] += registro["revistas"]
+            total["oferta"] += registro["oferta"]
 
         return {
             "classes": resultado,
@@ -852,5 +910,6 @@ if __name__ == "__main__":
     criar_banco()
     cadastrar_classes()
 
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
+            
