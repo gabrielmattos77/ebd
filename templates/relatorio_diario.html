@@ -627,7 +627,7 @@ h1 {
 
     text-decoration: none;
 
-    padding: 10px 18px;
+    padding: 10px 16px;
 
     border-radius: 10px;
 
@@ -653,7 +653,7 @@ h1 {
     border: 1px solid #d6b38a;
     border-radius: 10px;
 
-    padding: 10px 18px;
+    padding: 10px 16px;
 
     background: #f3dfc3;
     color: #604731;
@@ -705,6 +705,63 @@ h1 {
 
 </style>    
 
+
+<style>
+/* ================================
+   IMPRESSÃO DOS RELATÓRIOS
+   ================================ */
+
+ .botao-imprimir {
+    position: static !important;
+    z-index: 99999 !important;
+    display: inline-block !important;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #2f6f4e;
+    color: white;
+    box-shadow: 0 3px 10px rgba(0,0,0,.20);
+}
+
+.botao-imprimir:hover {
+    transform: translateY(-1px);
+}
+
+@media print {
+
+    @page {
+        size: A4;
+        margin: 12mm;
+    }
+
+    .botao-imprimir,
+    .acoes-relatorio,
+    button,
+    input,
+    select,
+    form {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    * {
+        box-shadow: none !important;
+    }
+
+    .relatorio {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+</style>
+
 </head>
 
 <body>
@@ -724,6 +781,13 @@ h1 {
             <a href="{{ request.url }}" class="btn-recalcular">
                 🔄 Recalcular
             </a>
+
+<button
+    type="button"
+    class="botao-imprimir"
+    onclick="window.print()">
+    🖨️ Imprimir relatório
+</button>
 
         </div>
 

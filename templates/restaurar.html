@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurar backup — EBD</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family: Arial, sans-serif;
+
+            background: #f8f6f2;
+            color: #3d2f24;
+        }
+
+        .caixa {
+            width: min(520px, 92%);
+
+            background: #ffffff;
+
+            border: 1px solid #d6c2ad;
+            border-radius: 16px;
+
+            padding: 35px;
+
+            text-align: center;
+
+            box-shadow: 0 8px 25px rgba(80, 55, 35, .10);
+        }
+
+        .icone {
+            width: 58px;
+            height: 58px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #f1e7db;
+
+            font-size: 27px;
+        }
+
+        h1 {
+            margin: 0;
+
+            color: #6b4f35;
+
+            font-size: 25px;
+        }
+
+        .descricao {
+            margin: 10px 0 25px;
+
+            color: #7c6a5b;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .aviso {
+            margin: 0 0 22px;
+
+            padding: 15px 17px;
+
+            background: #fff8eb;
+
+            border: 1px solid #ead7bc;
+
+            border-radius: 10px;
+
+            text-align: left;
+
+            font-size: 14px;
+
+            line-height: 1.55;
+
+            color: #604a36;
+        }
+
+        .aviso strong {
+            color: #6b4f35;
+        }
+
+        .campo-arquivo {
+            margin: 20px 0;
+        }
+
+        .campo-arquivo label {
+            display: block;
+
+            margin-bottom: 8px;
+
+            text-align: left;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: #6b4f35;
+        }
+
+        input[type="file"] {
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #d6c2ad;
+
+            border-radius: 10px;
+
+            background: #f8f6f2;
+
+            color: #5b4636;
+
+            font-size: 13px;
+
+            cursor: pointer;
+        }
+
+        input[type="file"]:hover {
+            border-color: #b99b7c;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 13px 18px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #6b4f35;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+        button:hover {
+            background: #57402d;
+
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .voltar {
+            display: inline-block;
+
+            margin-top: 18px;
+
+            color: #6b4f35;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .voltar:hover {
+            text-decoration: underline;
+        }
+
+        .rodape {
+            margin-top: 25px;
+
+            font-size: 11px;
+
+            color: #aaa09a;
+        }
+
+        @media (max-width: 600px) {
+
+            .caixa {
+                padding: 28px 22px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="caixa">
+
+        <div class="icone">
+            ♻️
+        </div>
+
+        <h1>
+            Restaurar backup
+        </h1>
+
+        <p class="descricao">
+            Recupere os dados do sistema EBD a partir de um
+            arquivo de backup.
+        </p>
+
+        <div class="aviso">
+
+            ⚠️ <strong>Atenção</strong><br>
+
+            O banco de dados atual será substituído pelo
+            backup selecionado.
+
+            <br><br>
+
+            Uma cópia do banco atual será criada automaticamente
+            antes da restauração, permitindo recuperar os dados
+            anteriores se necessário.
+
+        </div>
+
+        <form
+            action="/restaurar"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="campo-arquivo">
+
+                <label for="backup">
+                    Arquivo de backup
+                </label>
+
+                <input
+                    id="backup"
+                    type="file"
+                    name="backup"
+                    accept=".db"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                onclick="return confirmarRestauracao();">            
+                ♻️ Restaurar backup
+            </button>
+
+        </form>
+
+        <a href="/" class="voltar">
+            ← Voltar para o EBD
+        </a>
+
+        <div class="rodape">
+            Sistema de Controle da EBD
+        </div>
+
+    </div>
+
+<script>
+
+function confirmarRestauracao() {
+
+    return confirm(
+        "⚠️ CONFIRMAR RESTAURAÇÃO?\n\n" +
+        "Os dados atuais do EBD serão substituídos " +
+        "pelo backup selecionado.\n\n" +
+        "Uma cópia do banco atual será criada " +
+        "automaticamente antes da restauração.\n\n" +
+        "Deseja realmente continuar?"
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>

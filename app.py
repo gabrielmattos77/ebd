@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, send_file
+from datetime import datetime
 
 from banco import (
     criar_banco,
@@ -34,6 +35,59 @@ app = Flask(__name__)
 @app.route("/manifest.json")
 def manifest():
     return app.send_static_file("manifest.json")
+
+@app.route("/backup")
+def backup():
+
+    nome_backup = datetime.now().strftime(
+        "EBD_backup_%Y-%m-%d_%H-%M-%S.db"
+    )
+
+    return send_file(
+        "ebd.db",
+        as_attachment=True,
+        download_name=nome_backup
+    )
+
+@app.route("/restaurar", methods=["GET", "POST"])
+def restaurar():
+
+    if request.method == "GET":
+        return render_template("restaurar.html")
+
+    arquivo = request.files.get("backup")
+
+    if not arquivo or arquivo.filename == "":
+        return "Nenhum arquivo de backup foi selecionado.", 400
+
+    import os
+    import shutil
+
+    # Backup de segurança do banco atual
+    seguranca = datetime.now().strftime(
+        "ebd_antes_restauracao_%Y-%m-%d_%H-%M-%S.db"
+    )
+
+    shutil.copy2(
+        "ebd.db",
+        seguranca
+    )
+
+    # Salva temporariamente o backup enviado
+    arquivo.save("ebd_restauracao_temp.db")
+
+    # Substitui o banco atual
+    shutil.move(
+        "ebd_restauracao_temp.db",
+        "ebd.db"
+    )
+
+    return """
+    <h2>✅ Backup restaurado com sucesso!</h2>
+    <p>O banco de dados do EBD foi restaurado.</p>
+    <p>Uma cópia do banco anterior também foi criada por segurança.</p>
+    <p><a href="/">Voltar para o EBD</a></p>
+    """
 
 @app.route("/")
 def inicio():
