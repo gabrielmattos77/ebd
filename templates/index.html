@@ -1100,19 +1100,48 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
-<!-- BACKUP DISCRETO -->
-<a href="/backup"
-   class="backup-discreto"
-   title="Backup do sistema">
-    💾
-</a>
+<!-- MENU DE BACKUP DISCRETO -->
+
+<div class="backup-menu">
+
+    <button
+        type="button"
+        class="backup-discreto"
+        onclick="abrirMenuBackup()"
+        title="Backup e restauração">
+        💾
+    </button>
+
+    <div id="menuBackup" class="menu-backup-opcoes">
+
+        <a href="/backup">
+            💾 Fazer backup
+        </a>
+
+        <a href="/restaurar">
+            ♻️ Restaurar backup
+        </a>
+
+        <button
+            type="button"
+            onclick="fecharMenuBackup()">
+            ✕ Fechar
+        </button>
+
+    </div>
+
+</div>
 
 <style>
-    .backup-discreto {
+
+    .backup-menu {
         position: fixed;
         right: 18px;
         bottom: 18px;
+        z-index: 9999;
+    }
 
+    .backup-discreto {
         width: 38px;
         height: 38px;
 
@@ -1120,19 +1149,17 @@ if ("serviceWorker" in navigator) {
         align-items: center;
         justify-content: center;
 
+        border: none;
         border-radius: 50%;
 
         background: rgba(107, 79, 53, 0.10);
         color: #6b4f35;
 
-        text-decoration: none;
         font-size: 17px;
-
+        cursor: pointer;
         opacity: 0.55;
 
         transition: all 0.2s ease;
-
-        z-index: 9999;
     }
 
     .backup-discreto:hover {
@@ -1141,7 +1168,75 @@ if ("serviceWorker" in navigator) {
         color: white;
         transform: scale(1.05);
     }
+
+    .menu-backup-opcoes {
+        display: none;
+
+        position: absolute;
+        right: 0;
+        bottom: 48px;
+
+        width: 190px;
+
+        background: white;
+
+        border: 1px solid #d6c2ad;
+        border-radius: 12px;
+
+        padding: 8px;
+
+        box-shadow: 0 8px 25px rgba(80, 55, 35, 0.18);
+    }
+
+    .menu-backup-opcoes.aberto {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .menu-backup-opcoes a,
+    .menu-backup-opcoes button {
+        display: block;
+        width: 100%;
+
+        padding: 9px 10px;
+
+        border: none;
+        border-radius: 8px;
+
+        background: transparent;
+        color: #5b4331;
+
+        text-decoration: none;
+
+        font-size: 13px;
+        text-align: left;
+
+        cursor: pointer;
+    }
+
+    .menu-backup-opcoes a:hover,
+    .menu-backup-opcoes button:hover {
+        background: #f3eadf;
+    }
+
 </style>
+
+<script>
+
+    function abrirMenuBackup() {
+        document
+            .getElementById("menuBackup")
+            .classList.add("aberto");
+    }
+
+    function fecharMenuBackup() {
+        document
+            .getElementById("menuBackup")
+            .classList.remove("aberto");
+    }
+
+</script>
 
 </body>
 

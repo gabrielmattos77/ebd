@@ -1,6 +1,6 @@
 import sqlite3
 
-BANCO = "ebd.db"
+BANCO = "/home/gabrielmattos77/ebd/ebd.db"
 
 
 def conectar():
