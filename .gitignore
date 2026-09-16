@@ -23,3 +23,4 @@ app_backup_*
 banco_backup_*
 chamada_backup_*
 backups/
+.nfs*
