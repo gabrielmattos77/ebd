@@ -2,315 +2,692 @@
 <html lang="pt-BR">
 
 <head>
+
+     <link rel="manifest" href="{{ url_for('manifest') }}">
+     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/ebd-logo.png') }}">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Controle da EBD</title>
 
+    <meta name="theme-color" content="#6b4f35">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8f6f2;
-            color: #3d2f24;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        header {
-            padding: 30px;
-            text-align: center;
-            background: #ffffff;
-            border-bottom: 2px solid #d6c2ad;
-        }
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
 
-        header h1 {
-            margin: 0 0 8px;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background: #faf8f4;
+    color: #5b4331;
+}
 
-        header p {
-            margin: 0;
-            color: #9ca3af;
-        }
 
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 20px;
-        }
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
 
-        .domingo h2 {
-            margin-top: 0;
-        }
 
-        .classes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
+header {
+    position: relative;
 
-        .classe {
-            background: #f7f3ee;
-            border: 1px solid #d6b38a;
-            border-radius: 12px;
-            padding: 25px;
-            transition: 0.2s;
-        }
+    width: 100%;
+    height: 140px;
 
-        .classe:hover {
-            transform: translateY(-3px);
-            border-color: #faf4f0;
-        }
+    padding: 40px 20px 20px;
 
-        .classe h3 {
-            margin-top: 0;
-            color: #6b4f35;
-        }
+    text-align: center;
 
-        .classe p {
-            color: #8a7a68;
-        }
+    background: linear-gradient(
+        180deg,
+        #f1e3ce 0%,
+        #ead7bc 100%
+    );
+}
 
-        .dados-classe {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin: 15px 0;
-            padding: 12px;
-            background: #ffffff;
-            border-radius: 8px;
-            border: 1px solid #e2d5c5;
-        }
+header h1 {
+    margin: 12px 0 0;
 
-        .dados-classe span {
-            font-size: 14px;
-            color: #5f5145;
-        }
+    color: #5b4331;
 
-        .botoes {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
+    font-size: 30px;
+    font-weight: 800;
 
-        .botao {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            background: #c8ad8d;
-            color: #4e342e;
-            border:1px solid #b08968;
-            font-weight: normal;
-        }
+    letter-spacing: 0.3px;
 
-        .botao:hover {
-            background: #b08968;
-            color:white;        
-        }
+    text-shadow:
+        0 1px 3px rgba(80, 55, 35, 0.10);
+}
 
-        button {
-            border: none;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            background: #374151;
-            color: white;
-        }
+header p {
+    display: none;
+}
 
-        button:hover {
-            background: #4b5563;
-        }
 
-        .resumo {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
-        }
+/* =========================================================
+   PAINEL DOS BOTÕES
+   ========================================================= */
 
-        .card {
-            background: #c8ad8d;
-            color:#4e342e;
-            border:1px solid #b08968;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
+.navegacao {
+    position: absolute;
+    z-index: 20;
 
-        .card strong {
-            display: block;
-            font-size: 28px;
-            margin-bottom: 5px;
-        }
+    top: 115px;
+    left: 50%;
+    transform: translateX(-50%);
 
-        .menu-trimestres{
-            display:flex;
-            flex-direction:column;
-            gap:8px;
-            width:90px; 
-            margin:15px 0 20px 0;
-        }
+    width: 422px;
+    height: auto;
 
-        .tri-btn{
-            text-decoration:none;
-            text-align:center;
-            background:#ead7bc;
-            color:#5b4331;
-            padding:8px;
-            border-radius:8px;
-            font-size:13px;
-            font-weight:600;
-            border:1px solid #d8c3a5;
-        }
+    padding: 12px;
 
-        .tri-btn:hover{
-            background:#f5f1ea;
-            color:#5b4331;
-            border-color:#d8c3a5;
-        }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
 
-        .tri-ativo {
-            background: #b08968;
-            color: white;
-            border-color: #8f6d4e;
-        }
+    background: #fffdf9;
+    border: 1px solid #eadbc8;
+    border-radius: 18px;
 
-    </style>
+    box-shadow:
+        0 8px 18px rgba(80, 55, 35, 0.10);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BOTÕES
+   ========================================================= */
+
+.nav-btn {
+    width: 125px;
+    height: 95px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 8px;
+
+    text-align: center;
+    text-decoration: none;
+
+    border-radius: 14px;
+
+    border: 1px solid #dfc29e;
+
+    background: linear-gradient(
+        145deg,
+        #fff6e8,
+        #f1ddc0
+    );
+
+    color: #604731;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    box-shadow:
+        0 4px 9px rgba(90, 61, 37, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* =========================================================
+   EFEITO AO PASSAR O MOUSE
+   ========================================================= */
+
+.nav-btn:hover {
+    transform: translateY(-4px) scale(1.025);
+
+    background: linear-gradient(
+        145deg,
+        #fffaf2,
+        #f6e7d1
+    );
+
+    color: #523b29;
+
+    border-color: #d6b183;
+
+    box-shadow:
+        0 10px 18px rgba(90, 61, 37, 0.14);
+}
+
+
+/* =========================================================
+   CLIQUE
+   ========================================================= */
+
+.nav-btn:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
+
+/* =========================================================
+   ÁREA PRINCIPAL
+   ========================================================= */
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 155px 20px 60px;
+}
+
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    header {
+        height: 360px;
+
+        padding-top: 45px;
+    }
+
+    header h1 {
+        margin-top: 10px;
+
+        font-size: 26px;
+    }
+
+    .navegacao {
+        top: 105px;
+
+        width: 300px;
+        max-width: calc(100% - 28px);
+
+        padding: 12px;
+
+        gap: 9px;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        border-radius: 18px;
+    }
+
+    .nav-btn {
+        width: 100%;
+        height: 90px;
+
+        font-size: 13px;
+
+        border-radius: 13px;
+    }
+
+    .container {
+        padding-top: 155px 14px 40px;
+    }
+}
+
+
+/* =========================================================
+   ACESSIBILIDADE
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .nav-btn {
+        transition: none;
+    }
+}
+
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.dashboard {
+    width: 100%;
+    max-width: 850px;
+
+    margin: 70px auto 0;
+
+    padding: 14px;
+
+    background: #fffdf9;
+
+    border: 1px solid #eadbc8;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 12px 28px rgba(80, 55, 35, 0.08);
+}
+
+
+/* CABEÇALHO */
+
+.dashboard-cabecalho {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+.dashboard-cabecalho h2 {
+    margin: 0 0 2px;
+
+    color: #604731;
+
+    font-size: 18px;
+}
+
+.dashboard-cabecalho p {
+    margin: 0;
+
+    color: #8d8a86;
+
+    font-size: 14px;
+}
+
+
+/* GRADE */
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 9px;
+}
+
+
+/* CARDS */
+
+.dashboard-card {
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 11px;
+
+    border-radius: 12px;
+
+    border: 1px solid #eadbc8;
+
+    box-shadow:
+        0 4px 9px rgba(90, 61, 37, 0.06);
+}
+
+
+/* ÍCONE */
+
+.dashboard-icone {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.75);
+
+    font-size: 19px;
+}
+
+
+/* TEXTO */
+
+.dashboard-label {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #77716b;
+
+    font-size: 12px;
+}
+
+.dashboard-card strong {
+    display: block;
+
+    color: #604731;
+
+    font-size: 21px;
+}
+
+
+/* CORES SUAVES */
+
+.dashboard-card.alunos {
+    background: linear-gradient(145deg, #f1f6fd, #e7f0fc);
+}
+
+.dashboard-card.presentes {
+    background: linear-gradient(145deg, #f1f8ef, #e6f3e3);
+}
+
+.dashboard-card.ausentes {
+    background: linear-gradient(145deg, #fff0ef, #fce5e3);
+}
+
+.dashboard-card.visitantes {
+    background: linear-gradient(145deg, #f5f0fb, #eee7f8);
+}
+
+.dashboard-card.biblias {
+    background: linear-gradient(145deg, #fff7e9, #fdf0dc);
+}
+
+.dashboard-card.revistas {
+    background: linear-gradient(145deg, #eef8f7, #e4f1f0);
+}
+
+.dashboard-card.oferta {
+    background: linear-gradient(145deg, #f1f7eb, #e7f0dc);
+
+    grid-column: span 2;
+}
+
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        padding: 130px 14px 40px;
+    }
+
+    .biblia-dia {
+        padding: 16px;
+
+        gap: 12px;
+    }
+
+    .biblia-icone {
+        width: 45px;
+        height: 45px;
+
+        font-size: 23px;
+    }
+
+    .biblia-texto {
+        font-size: 13px;
+    }
+
+    .dashboard {
+        padding: 16px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 10px;
+    }
+
+    .dashboard-card {
+        min-height: 90px;
+
+        padding: 12px;
+
+        gap: 9px;
+    }
+
+    .dashboard-icone {
+        width: 40px;
+        height: 40px;
+
+        font-size: 20px;
+    }
+
+    .dashboard-card strong {
+        font-size: 21px;
+    }
+
+    .dashboard-card.oferta {
+        grid-column: span 2;
+    }
+}
+
+/* =========================================================
+   AJUSTE FINAL — POSIÇÃO DO CONTEÚDO PRINCIPAL
+   ========================================================= */
+
+</style>
+
 </head>
 
 <body>
 
     <header>
-        <h1>Controle da EBD</h1>
-        <p>Escola Bíblica Dominical</p>
-    </header>
+
+    <h1>Controle da EBD</h1>
+<nav class="navegacao">
+
+
+    <a href="/" class="nav-btn">
+        🏠 Início
+    </a>
+
+    <a href="/chamada" class="nav-btn">
+        📋 Chamada
+    </a>
+
+    <a href="/alunos" class="nav-btn">
+        👥 Alunos
+    </a>
+
+    <a href="/visitantes" class="nav-btn">
+        👤 Visitantes
+    </a>
+
+    <a href="/relatorio_diario" class="nav-btn">
+        📄 Relatório Diário
+    </a>
+
+    <a href="/relatorio_mes" class="nav-btn">
+        📊 Relatório Mensal
+    </a>
+</nav>
+
+</header>
 
     <main class="container">
 
-        <div class="menu-trimestres">
+    <!-- DASHBOARD -->
+    <section class="dashboard">
 
-    <a href="/?tri=1"
-       class="tri-btn {% if tri == 1 %}tri-ativo{% endif %}">
-        1º TRI
-    </a>
+        <div class="dashboard-cabecalho">
 
-    <a href="/?tri=2"
-       class="tri-btn {% if tri == 2 %}tri-ativo{% endif %}">
-        2º TRI
-    </a>
+            <div>
+                <h2>📊 Resumo da EBD</h2>
 
-    <a href="/?tri=3"
-       class="tri-btn {% if tri == 3 %}tri-ativo{% endif %}">
-        3º TRI
-    </a>
-
-    <a href="/?tri=4"
-       class="tri-btn {% if tri == 4 %}tri-ativo{% endif %}">
-        4º TRI
-    </a>
-
-</div>
-
-<section class="classes">
-
-            {% for id_classe, nome_classe in classes %}
-
-            <div class="classe">
-
-                <h3>{{ nome_classe }}</h3>
-
-                <div class="dados-classe">
-
-    {% for estatistica in estatisticas_classes %}
-
-        {% if estatistica.classe == nome_classe %}
-
-            <span>👥 Alunos: {{ estatistica.matriculados }}</span>
-
-            <span>✅ Presentes: {{ estatistica.presentes }}</span>
-
-            <span>👤 Visitantes: {{ estatistica.visitantes }}</span>
-
-            <span>📊 Assistências: {{ estatistica.assistencias }}</span>
-
-            <span>📖 Bíblias: {{ estatistica.biblias }}</span>
-
-            <span>📚 Revistas: {{ estatistica.revistas }}</span>
-
-            <span>💰 Oferta: R$ {{ "%.2f"|format(estatistica.ofertas) }}</span>
-
-        {% endif %}
-
-    {% endfor %}
-
-</div>
-
-                <div class="botoes">
-                    <a href="/chamada?classe_id={{ id_classe }}" class="botao">
-                        📋 Chamada
-                    </a>
-                    <a href="/livro_chamada?classe_id={{ id_classe }}" class="botao">
-                        📖 Livro
-                    </a>
-                    <a href="/alunos?classe_id={{ id_classe }}" class="botao">
-                        👥 Alunos
-                    </a>
-                    <button>📖 Bíblias</button>
-                    <button>📚 Revistas</button>
-                    <button>💰 Oferta</button>
-                    <button>👤 Visitantes</button>
-                </div>
+                {% if ultimo_domingo %}
+                    <p>
+                        Último domingo registrado:
+                        <strong>
+                            {{ ultimo_domingo[8:10] }}/{{ ultimo_domingo[5:7] }}/{{ ultimo_domingo[0:4] }}
+                        </strong>
+                    </p>
+                {% else %}
+                    <p>Nenhum domingo registrado ainda.</p>
+                {% endif %}
 
             </div>
 
-            {% endfor %}
+        </div>
 
-        </section>
 
-        <section class="resumo">
+        <div class="dashboard-grid">
 
-    <div class="card">
-        <strong>{{ estatisticas_classes|length }}</strong>
-        Classes
+            <div class="dashboard-card">
+                <span class="dashboard-icone">👥</span>
+                <div>
+                    <span class="dashboard-label">Alunos</span>
+                    <strong>{{ dashboard.alunos }}</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-icone">🟢</span>
+                <div>
+                    <span class="dashboard-label">Presentes</span>
+                    <strong>{{ dashboard.presentes }}</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-icone">🔴</span>
+                <div>
+                    <span class="dashboard-label">Ausentes</span>
+                    <strong>{{ dashboard.ausentes }}</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-icone">🟠</span>
+                <div>
+                    <span class="dashboard-label">Visitantes</span>
+                    <strong>{{ dashboard.visitantes }}</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-icone">📖</span>
+                <div>
+                    <span class="dashboard-label">Bíblias</span>
+                    <strong>{{ dashboard.biblias }}</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <span class="dashboard-icone">📚</span>
+                <div>
+                    <span class="dashboard-label">Revistas</span>
+                    <strong>{{ dashboard.revistas }}</strong>
+                </div>
+            </div>
+
+            <div class="dashboard-card dashboard-oferta">
+                <span class="dashboard-icone">💰</span>
+                <div>
+                    <span class="dashboard-label">Oferta</span>
+                    <strong>
+                        R$ {{ "%.2f"|format(dashboard.oferta)|replace(".", ",") }}
+                    </strong>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/static/service-worker.js")
+            .then(() => {
+                console.log("Service Worker registrado com sucesso.");
+            })
+            .catch(error => {
+                console.error("Erro ao registrar Service Worker:", error);
+            });
+    });
+}
+</script>
+
+<!-- CONTROLES DO SISTEMA -->
+<div class="controles-sistema">
+    <div class="backup-restauracao">
+        <a href="/backup" title="Fazer backup">
+            💾
+        </a>
+
+        <a href="/restaurar" title="Restaurar backup">
+            ♻️
+        </a>
     </div>
 
-    <div class="card">
-        <strong>
-            {{ estatisticas_classes
-                |sum(attribute="presentes") }}
-        </strong>
-        Presentes
-    </div>
+    <a href="/sair" class="sair-discreto" title="Sair do sistema">
+        🚪
+    </a>
+</div>
 
-    <div class="card">
-        <strong>
-            {{ estatisticas_classes
-                |sum(attribute="visitantes") }}
-        </strong>
-        Visitantes
-    </div>
+<style>
+.controles-sistema {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
 
-    <div class="card">
-        <strong>
-            R$ {{ "%.2f"|format(
-                estatisticas_classes
-                |sum(attribute="ofertas")
-            ) }}
-        </strong>
-        Ofertas
-    </div>
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 
-</section>
+    z-index: 9999;
+}
 
-    </main>
+.backup-restauracao {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.backup-restauracao a,
+.sair-discreto {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(107, 79, 53, 0.10);
+    color: #6b4f35;
+
+    text-decoration: none;
+    font-size: 17px;
+
+    opacity: 0.55;
+
+    transition: all 0.2s ease;
+}
+
+.backup-restauracao a:hover,
+.sair-discreto:hover {
+    opacity: 1;
+    background: #6b4f35;
+    color: white;
+    transform: scale(1.05);
+}
+</style>
 
 </body>
 
