@@ -476,15 +476,1004 @@ header p {
    AJUSTE FINAL — POSIÇÃO DO CONTEÚDO PRINCIPAL
    ========================================================= */
 
+
+/* =========================================================
+   NOVO VISUAL — CABEÇALHO / BÍBLIA / RODAPÉ
+   ========================================================= */
+
+header {
+    position: relative;
+    min-height: 160px;
+    padding-top: 38px;
+    overflow: hidden;
+}
+
+header::after {
+    content: "";
+    position: absolute;
+    left: -5%;
+    bottom: -72px;
+    width: 110%;
+    height: 115px;
+    background: #faf8f4;
+    border-radius: 50% 50% 0 0;
+    z-index: 1;
+}
+
+header h1 {
+    position: relative;
+    z-index: 5;
+}
+
+/* Bíblia aberta no canto superior direito */
+.biblia-aberta {
+    position: absolute;
+    z-index: 10;
+    top: 25px;
+    right: 38px;
+    width: 82px;
+    height: 58px;
+    transform: rotate(-3deg);
+}
+
+.biblia-aberta .pagina {
+    position: absolute;
+    top: 5px;
+    width: 39px;
+    height: 49px;
+    background: #fffdf5;
+    border: 2px solid #806044;
+    box-shadow: 0 3px 5px rgba(80,55,35,.18);
+}
+
+.biblia-aberta .pagina-esquerda {
+    left: 1px;
+    border-radius: 8px 2px 3px 10px;
+    transform: skewY(7deg);
+}
+
+.biblia-aberta .pagina-direita {
+    right: 1px;
+    border-radius: 2px 8px 10px 3px;
+    transform: skewY(-7deg);
+}
+
+.biblia-aberta .lombada {
+    position: absolute;
+    z-index: 3;
+    left: 39px;
+    top: 6px;
+    width: 5px;
+    height: 48px;
+    background: #806044;
+    border-radius: 50%;
+}
+
+/* Rodapé */
+.rodape-igreja {
+    width: 100%;
+    margin-top: 35px;
+    padding: 22px 15px 28px;
+    text-align: center;
+    color: #806044;
+    background: #ead7bc;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .2px;
+}
+
+@media (max-width: 700px) {
+    header {
+        min-height: 160px;
+        padding-top: 35px;
+    }
+
+    header h1 {
+        font-size: 27px;
+        padding-right: 55px;
+        padding-left: 20px;
+    }
+
+    .biblia-aberta {
+        top: 18px;
+        right: 15px;
+        transform: scale(.75) rotate(-3deg);
+        transform-origin: top right;
+    }
+
+    .rodape-igreja {
+        font-size: 11px;
+    }
+}
+
+
+
+/* =========================================================
+   AJUSTE DO CABEÇALHO — NÃO ALTERA O DASHBOARD
+   ========================================================= */
+
+header {
+    height: 240px;
+    min-height: 240px;
+    padding: 28px 20px 20px;
+    position: relative;
+    overflow: visible;
+    background:
+        linear-gradient(
+            180deg,
+            #ead9c0 0%,
+            #f3e4cd 100%
+        );
+}
+
+/* curva suave na parte inferior do cabeçalho */
+header::after {
+    content: "";
+    position: absolute;
+    left: -5%;
+    bottom: -28px;
+    width: 110%;
+    height: 55px;
+    background: #faf8f4;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    z-index: 1;
+}
+
+/* título */
+header h1 {
+    position: relative;
+    z-index: 10;
+    margin: 0;
+    padding-top: 0;
+    font-size: 34px;
+    color: #5b4331;
+}
+
+/* =========================================================
+   BÍBLIA ABERTA
+   ========================================================= */
+
+.biblia-aberta {
+    position: absolute;
+    z-index: 15;
+    top: 18px;
+    right: 45px;
+    width: 105px;
+    height: 75px;
+    transform: rotate(-2deg);
+}
+
+/* páginas */
+.biblia-aberta .pagina {
+    position: absolute;
+    top: 3px;
+    width: 50px;
+    height: 63px;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 6px,
+            rgba(100,75,50,.16) 7px,
+            transparent 8px
+        ),
+        #fffdf5;
+
+    border: 2px solid #795536;
+    box-shadow:
+        0 5px 8px rgba(70,45,25,.22);
+}
+
+/* página esquerda */
+.biblia-aberta .pagina-esquerda {
+    left: 2px;
+    border-radius: 7px 2px 4px 13px;
+    transform: skewY(5deg);
+}
+
+/* página direita */
+.biblia-aberta .pagina-direita {
+    right: 2px;
+    border-radius: 2px 7px 13px 4px;
+    transform: skewY(-5deg);
+}
+
+/* lombada */
+.biblia-aberta .lombada {
+    position: absolute;
+    z-index: 20;
+    left: 50px;
+    top: 4px;
+    width: 6px;
+    height: 62px;
+    background: linear-gradient(
+        90deg,
+        #6d4728,
+        #b27a39,
+        #6d4728
+    );
+    border-radius: 50%;
+    box-shadow: 0 2px 3px rgba(60,40,20,.25);
+}
+
+/* =========================================================
+   RODAPÉ
+   ========================================================= */
+
+.rodape-igreja {
+    width: 100%;
+    margin: 0;
+    padding: 26px 20px 30px;
+
+    text-align: center;
+
+    color: #5b4331;
+    background:
+        linear-gradient(
+            180deg,
+            #f3e4cd 0%,
+            #ead9c0 100%
+        );
+
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    header {
+        height: 225px;
+        min-height: 225px;
+        padding-top: 30px;
+    }
+
+    header h1 {
+        font-size: 27px;
+        padding-right: 75px;
+    }
+
+    .biblia-aberta {
+        top: 15px;
+        right: 12px;
+        transform: scale(.72) rotate(-2deg);
+        transform-origin: top right;
+    }
+
+    .rodape-igreja {
+        font-size: 13px;
+    }
+}
+
+
+/* Ajuste sutil da posição do Dashboard */
+.dashboard {
+    transform: translateY(-12px);
+}
+
+
+.lema-igreja {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.versiculo-igreja {
+    max-width: 850px;
+    margin: 12px auto 0;
+    font-size: 12px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+
+
+/* =========================================================
+   AJUSTE FINO — POSIÇÕES E RODAPÉ
+   ========================================================= */
+
+/* 1 — Descer o título */
+header h1 {
+    transform: translateY(15px);
+}
+
+/* 2 — Descer o menu dos 6 botões */
+.navegacao {
+    top: 130px;
+}
+
+/* 3 — Subir mais o Dashboard */
+.dashboard {
+    transform: translateY(-32px);
+}
+
+/* 4 — Aumentar textos do rodapé */
+.rodape-igreja {
+    font-size: 22px;
+    padding-top: 30px;
+    padding-bottom: 34px;
+}
+
+.rodape-igreja .lema-igreja {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.rodape-igreja .versiculo-igreja {
+    max-width: 1000px;
+    margin-top: 15px;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+
+/* =========================================================
+   REDUÇÃO SUTIL DO TAMANHO DA PÁGINA
+   ========================================================= */
+
+header h1 {
+    font-size: 31px;
+}
+
+.navegacao {
+    width: 400px;
+    padding: 10px;
+    gap: 8px;
+}
+
+.nav-btn {
+    width: 118px;
+    height: 88px;
+    font-size: 13px;
+}
+
+.dashboard {
+    transform: translateY(-32px) scale(0.96);
+    transform-origin: center top;
+}
+
+.rodape-igreja {
+    font-size: 19px;
+}
+
+.rodape-igreja .lema-igreja {
+    font-size: 16px;
+}
+
+.rodape-igreja .versiculo-igreja {
+    font-size: 13px;
+}
+
+
+
+/* =========================================================
+   VISUAL RETRÔ / RÚSTICO — CABEÇALHO E RODAPÉ
+   ========================================================= */
+
+header {
+    background:
+        radial-gradient(
+            ellipse at 20% 30%,
+            rgba(255,255,255,0.35) 0%,
+            transparent 45%
+        ),
+        radial-gradient(
+            ellipse at 80% 70%,
+            rgba(120,80,40,0.08) 0%,
+            transparent 50%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(120,80,40,0.025) 0px,
+            rgba(120,80,40,0.025) 1px,
+            transparent 1px,
+            transparent 5px
+        ),
+        linear-gradient(
+            180deg,
+            #e9d2ae 0%,
+            #f0dfc3 48%,
+            #e5cda8 100%
+        );
+
+    border-bottom: 1px solid rgba(105,72,42,0.20);
+}
+
+/* textura sutil de papel antigo */
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(90,60,30,0.08) 0px,
+            transparent 2px
+        ),
+        radial-gradient(
+            circle at 70% 60%,
+            rgba(90,60,30,0.06) 0px,
+            transparent 2px
+        ),
+        radial-gradient(
+            circle at 40% 80%,
+            rgba(90,60,30,0.05) 0px,
+            transparent 2px
+        );
+
+    opacity: 0.45;
+    z-index: 2;
+}
+
+/* =========================================================
+   RODAPÉ RÚSTICO
+   ========================================================= */
+
+.rodape-igreja {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            ellipse at 15% 40%,
+            rgba(255,255,255,0.30) 0%,
+            transparent 45%
+        ),
+        radial-gradient(
+            ellipse at 85% 60%,
+            rgba(120,80,40,0.09) 0%,
+            transparent 50%
+        ),
+        repeating-linear-gradient(
+            0deg,
+            rgba(120,80,40,0.025) 0px,
+            rgba(120,80,40,0.025) 1px,
+            transparent 1px,
+            transparent 5px
+        ),
+        linear-gradient(
+            180deg,
+            #ead4b2 0%,
+            #f0dfc3 50%,
+            #e3c9a2 100%
+        );
+
+    border-top: 1px solid rgba(105,72,42,0.18);
+    color: #5b4029;
+}
+
+/* detalhe decorativo discreto */
+.rodape-igreja::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+
+    background: rgba(105,72,42,0.18);
+}
+
+/* texto com aparência mais tradicional */
+.rodape-igreja > div {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 1px rgba(255,255,255,0.45);
+}
+
+
+
+/* =========================================================
+   TÍTULO — ESTILO RETRÔ ARREDONDADO
+   ========================================================= */
+
+header h1 {
+    display: inline-block;
+
+    padding: 8px 32px 10px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,0.28),
+            rgba(190,145,92,0.10)
+        );
+
+    border: 1px solid rgba(105,72,42,0.22);
+
+    border-radius: 28px;
+
+    box-shadow:
+        0 3px 7px rgba(80,55,35,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+
+    text-shadow:
+        0 1px 1px rgba(255,255,255,0.45);
+
+    position: relative;
+    z-index: 10;
+}
+
+
+
+/* =========================================================
+   TÍTULO EM ARCO — ACOMPANHA A CURVA DO CABEÇALHO
+   ========================================================= */
+
+header h1.titulo-arco {
+    display: block;
+    position: relative;
+    z-index: 10;
+
+    width: 600px;
+    max-width: 80vw;
+    height: 105px;
+
+    margin: -5px auto 0;
+    padding: 0;
+
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+header h1.titulo-arco svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+header h1.titulo-arco text {
+    fill: #5b4331;
+
+    font-family: Arial, sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-shadow:
+        0 1px 2px rgba(80, 55, 35, 0.12);
+}
+
+@media (max-width: 700px) {
+
+    header h1.titulo-arco {
+        width: 430px;
+        max-width: 90vw;
+        height: 85px;
+        margin-top: -2px;
+    }
+
+    header h1.titulo-arco text {
+        font-size: 34px;
+    }
+}
+
+
+
+/* =========================================================
+   CABEÇALHO RETO — SEM CURVATURA
+   ========================================================= */
+
+header {
+    border-radius: 0;
+}
+
+/* Remove a curva inferior do bloco bege */
+header::after {
+    display: none !important;
+}
+
+/* Título reto e normal */
+header h1,
+header h1.titulo-arco {
+    display: block;
+
+    width: auto;
+    max-width: none;
+    height: auto;
+
+    margin: 0 auto;
+    padding: 0;
+
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+
+    transform: translateY(15px);
+
+    color: #5b4331;
+    font-family: Arial, sans-serif;
+    font-size: 31px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+
+    text-shadow:
+        0 1px 3px rgba(80, 55, 35, 0.10);
+}
+
+/* Caso ainda exista o SVG, ele deixa de interferir */
+header h1.titulo-arco svg {
+    display: none;
+}
+
+
+
+/* =========================================================
+   BLOCO SUPERIOR RETRÔ — MAIS BAIXO
+   ========================================================= */
+
+header {
+    height: 185px !important;
+    min-height: 185px !important;
+    padding-top: 22px !important;
+}
+
+/* Mantém o título reto */
+header h1 {
+    transform: translateY(8px);
+}
+
+/* Mantém o menu sobreposto na mesma região */
+.navegacao {
+    top: 115px;
+}
+
+
+
+/* Título — ajuste vertical */
+header h1 {
+    transform: translateY(18px) !important;
+}
+
+
+
+/* =========================================================
+   BLOCO RETRÔ — PAPEL ANTIGO / RÚSTICO REALISTA
+   ========================================================= */
+
+header {
+    background-color: #e4cba5 !important;
+
+    background-image:
+        /* manchas muito suaves do papel */
+        radial-gradient(
+            ellipse at 18% 25%,
+            rgba(255,255,255,.20) 0%,
+            transparent 32%
+        ),
+        radial-gradient(
+            ellipse at 82% 72%,
+            rgba(100,65,35,.10) 0%,
+            transparent 35%
+        ),
+        radial-gradient(
+            ellipse at 55% 15%,
+            rgba(120,80,40,.07) 0%,
+            transparent 28%
+        ),
+
+        /* pequenas irregularidades */
+        repeating-linear-gradient(
+            93deg,
+            rgba(105,72,40,.025) 0px,
+            rgba(105,72,40,.025) 1px,
+            transparent 1px,
+            transparent 7px
+        ),
+
+        repeating-linear-gradient(
+            177deg,
+            rgba(255,255,255,.035) 0px,
+            rgba(255,255,255,.035) 1px,
+            transparent 1px,
+            transparent 9px
+        ),
+
+        /* base envelhecida */
+        linear-gradient(
+            180deg,
+            #e9d5b3 0%,
+            #e2c8a0 48%,
+            #d9bc91 100%
+        ) !important;
+
+    background-blend-mode:
+        normal,
+        multiply,
+        multiply,
+        multiply,
+        screen,
+        normal;
+
+    border-bottom:
+        1px solid rgba(91,67,49,.25);
+
+    box-shadow:
+        inset 0 -5px 12px rgba(91,67,49,.07),
+        inset 0 2px 5px rgba(255,255,255,.16);
+}
+
+/* envelhecimento discreto nas extremidades */
+header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at 0% 50%,
+            rgba(80,50,25,.10),
+            transparent 24%
+        ),
+        radial-gradient(
+            ellipse at 100% 50%,
+            rgba(80,50,25,.10),
+            transparent 24%
+        );
+
+    opacity: .45;
+    z-index: 2;
+}
+
+/* mantém o conteúdo acima da textura */
+header h1,
+header .biblia-aberta {
+    z-index: 10;
+}
+
+
+
+/* =========================================================
+   BÍBLIA REAL — IMAGEM DO CABEÇALHO
+   ========================================================= */
+
+header .biblia-aberta {
+    position: absolute;
+    z-index: 15;
+
+    top: 8px;
+    right: 28px;
+
+    width: 145px;
+    height: 95px;
+
+    margin: 0;
+    padding: 0;
+
+    background: none;
+    border: none;
+    box-shadow: none;
+
+    transform: none;
+}
+
+header .biblia-aberta img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    border: none;
+    border-radius: 4px;
+
+    box-shadow:
+        0 5px 10px rgba(55,35,20,.28);
+}
+
+/* AJUSTE — BEGE RETRÔ MAIS CLARO */
+header {
+    background-color: #f3e6d2 !important;
+    background-image: none !important;
+}
+
+.rodape-igreja {
+    background: #f3e6d2 !important;
+    background-image: none !important;
+}
+/* AJUSTE — BLOCOS NA MESMA TONALIDADE DOS BOTÕES */
+header {
+    background: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+    background-image: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+}
+
+.rodape-igreja {
+    background: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+    background-image: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+}
+/* AJUSTE — BEGE RETRÔ LEVEMENTE MAIS ESCURO */
+header {
+    background: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+    background-image: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+}
+
+.rodape-igreja {
+    background: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+    background-image: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+}
+/* AJUSTE FINAL — BLOCOS MAIS BAIXOS */
+header {
+    height: 145px !important;
+    min-height: 145px !important;
+}
+
+.rodape-igreja {
+    padding-top: 12px !important;
+    padding-bottom: 14px !important;
+}
+/* AJUSTE — TOPO MENOR + MAIS ESPAÇO ENTRE MENU E DASHBOARD */
+header {
+    height: 135px !important;
+    min-height: 135px !important;
+}
+
+.dashboard {
+    margin-top: 90px !important;
+}
+
+
+
+/* LOGOS INSTITUCIONAIS — FINAL DO RODAPÉ */
+.logos-imw-rodape {
+    width: 100%;
+    max-width: 360px;
+    margin: 10px auto 0;
+    text-align: center;
+}
+
+.logos-imw-rodape img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 0.82;
+}
+
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+
+<style id="ajuste-logos-rodape">
+/* Logos IMW — discretos abaixo do versículo */
+.logos-imw-rodape {
+    margin: 10px auto 0 !important;
+    padding: 0 !important;
+    width: 220px !important;
+    max-width: 220px !important;
+    height: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.logos-imw-rodape img {
+    display: block !important;
+    width: 220px !important;
+    max-width: 220px !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    opacity: 0.78 !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+
+<style id="destaque-nome-igreja">
+.rodape-igreja .nome-igreja {
+    color: #6b4728 !important;
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.3px !important;
+    text-shadow: 0 1px 2px rgba(255,255,255,.45) !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+
+<style id="ajuste-mobile-tablet-ebd">
+@media (max-width: 700px) {
+
+    header {
+        height: 225px !important;
+        min-height: 225px !important;
+        padding: 24px 14px 10px !important;
+    }
+
+    header h1 {
+        font-size: 27px !important;
+        margin-top: 8px !important;
+        padding: 0 65px 0 10px !important;
+    }
+
+    header .biblia-aberta {
+        top: 8px !important;
+        right: 10px !important;
+        width: 105px !important;
+        height: 70px !important;
+    }
+
+    .navegacao {
+        top: 105px !important;
+        width: 300px !important;
+        max-width: calc(100% - 24px) !important;
+        padding: 10px !important;
+        gap: 8px !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .nav-btn {
+        width: 100% !important;
+        height: 82px !important;
+        font-size: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .container {
+        padding: 125px 12px 30px !important;
+    }
+
+    .dashboard {
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    .rodape-igreja {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 11px !important;
+        overflow: hidden !important;
+    }
+}
 </style>
 
 </head>
 
 <body>
 
-    <header>
+<header>
+
+    <div class="biblia-aberta">
+        <img src="{{ url_for('static', filename='icons/biblia-aberta.png') }}"
+             alt="Bíblia aberta">
+    </div>
 
     <h1>Controle da EBD</h1>
+
 <nav class="navegacao">
 
 
@@ -687,8 +1676,280 @@ if ("serviceWorker" in navigator) {
     color: white;
     transform: scale(1.05);
 }
+/* AJUSTE — BEGE RETRÔ MAIS CLARO */
+header {
+    background-color: #f3e6d2 !important;
+    background-image: none !important;
+}
+
+.rodape-igreja {
+    background: #f3e6d2 !important;
+    background-image: none !important;
+}
+/* AJUSTE — BLOCOS NA MESMA TONALIDADE DOS BOTÕES */
+header {
+    background: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+    background-image: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+}
+
+.rodape-igreja {
+    background: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+    background-image: linear-gradient(145deg, #fff6e8, #f6e7d1) !important;
+}
+/* AJUSTE — BEGE RETRÔ LEVEMENTE MAIS ESCURO */
+header {
+    background: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+    background-image: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+}
+
+.rodape-igreja {
+    background: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+    background-image: linear-gradient(145deg, #f7ead7, #ead7bc) !important;
+}
+/* AJUSTE FINAL — BLOCOS MAIS BAIXOS */
+header {
+    height: 145px !important;
+    min-height: 145px !important;
+}
+
+.rodape-igreja {
+    padding-top: 12px !important;
+    padding-bottom: 14px !important;
+}
+/* AJUSTE — TOPO MENOR + MAIS ESPAÇO ENTRE MENU E DASHBOARD */
+header {
+    height: 135px !important;
+    min-height: 135px !important;
+}
+
+.dashboard {
+    margin-top: 90px !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
 </style>
+
+
+<footer class="rodape-igreja">
+<div class="nome-igreja">Igreja Metodista Wesleyana em Conceição - 2026</div>
+
+    <div class="lema-igreja">
+        Andando em unidade, crescendo em amor
+    </div>
+
+    <div class="versiculo-igreja">
+        <em>
+            "Eu sou a videira, vós os ramos; quem permanece em mim, e eu nele,
+            esse dá muito fruto; porque sem mim nada podeis fazer - João 15:5".
+        </em>
+    </div>
+
+    <div class="logos-imw-rodape">
+        <img src="{{ url_for('static', filename='icons/logos-imw-rodape.png') }}"
+             alt="Logos IMW Conceição, Retiros, Ministérios, Geracional e GCEU">
+    </div>
+
+</footer>
 
 </body>
 
 </html>
+
+
+<style id="ajuste-final-altura-rodape">
+/* AJUSTE FINAL — RODAPÉ MAIS COMPACTO */
+.rodape-igreja {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+}
+
+.rodape-igreja .lema-igreja {
+    margin-top: 6px !important;
+}
+
+.rodape-igreja .versiculo-igreja {
+    margin-top: 8px !important;
+    line-height: 1.45 !important;
+}
+
+.rodape-igreja .logos-imw-rodape {
+    margin-top: 8px !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+<style id="rodape-ainda-mais-compacto">
+.rodape-igreja {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.rodape-igreja .lema-igreja {
+    margin-top: 4px !important;
+}
+
+.rodape-igreja .versiculo-igreja {
+    margin-top: 5px !important;
+    line-height: 1.35 !important;
+}
+
+.rodape-igreja .logos-imw-rodape {
+    margin-top: 5px !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+<style id="rodape-conteudo-mais-baixo">
+/* Desce todo o conteúdo do rodapé, mantendo o espaçamento */
+.rodape-igreja > div {
+    position: relative !important;
+    top: 18px !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+<style id="ajuste-espacamento-rodape-final">
+/* Ajuste fino do espaçamento interno do rodapé */
+.rodape-igreja .nome-igreja {
+    margin-bottom: 7px !important;
+}
+
+.rodape-igreja .lema-igreja {
+    margin-bottom: 9px !important;
+}
+
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 6px !important;
+    margin-bottom: 6px !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+<style id="ajuste-final-versiculo-logos">
+.rodape-igreja .versiculo-igreja {
+    margin-bottom: 4px !important;
+}
+
+.rodape-igreja .logos-imw-rodape {
+    margin-top: 0 !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+<style id="aproximar-logos-do-versiculo">
+.rodape-igreja .logos-imw-rodape {
+    position: relative !important;
+    top: -14px !important;
+    margin-top: -6px !important;
+}
+/* AJUSTE FINAL — aproximar versículo dos logos */
+.rodape-igreja .versiculo-igreja {
+    position: relative !important;
+    top: 12px !important;
+}
+</style>
+
+<style id="logos-bem-no-final">
+.rodape-igreja .logos-imw-rodape {
+    position: relative !important;
+    top: 28px !important;
+}
+</style>
+
+<style id="logos-subir-2px">
+.rodape-igreja .logos-imw-rodape {
+    top: 26px !important;
+}
+</style>
+
+<style id="logos-descer-3px">
+.rodape-igreja .logos-imw-rodape {
+    top: 29px !important;
+}
+</style>
+
+<style id="logos-subir-3px">
+.rodape-igreja .logos-imw-rodape {
+    top: 26px !important;
+}
+</style>
+
+<style id="logos-subir-5px">
+.rodape-igreja .logos-imw-rodape {
+    top: 21px !important;
+}
+</style>
+
+<style id="versiculo-descer-5px">
+.rodape-igreja .versiculo-igreja {
+    top: 17px !important;
+}
+</style>
+
+<style id="versiculo-descer-3px">
+.rodape-igreja .versiculo-igreja {
+    top: 20px !important;
+}
+</style>
+
+<style id="diminuir-somente-altura-rodape">
+.rodape-igreja {
+    padding-bottom: 5px !important;
+}
+</style>
+
+<style id="altura-geral-rodape">
+.rodape-igreja {
+    height: 145px !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+}
+</style>
+
+<style id="altura-geral-rodape">
+.rodape-igreja {
+    height: 145px !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+}
+</style>
+
+<style id="aumentar-altura-rodape">
+.rodape-igreja {
+    height: 165px !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+}
+</style>
+
+<style id="reduzir-margem-superior-rodape">
+.rodape-igreja {
+    padding-top: 2px !important;
+}
+</style>
+
+
