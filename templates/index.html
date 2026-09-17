@@ -1238,6 +1238,75 @@ if ("serviceWorker" in navigator) {
 
 </script>
 
+
+
+
+
+
+
+
+<!-- CONTROLE DE SESSAO NO FECHAMENTO DO APP -->
+
+<script>
+(function () {
+
+    let navegandoDentroDoApp = false;
+
+    /*
+     * Quando o usuário clica em uma tela do próprio EBD,
+     * marcamos como navegação interna.
+     */
+    document.addEventListener("click", function (evento) {
+
+        const link = evento.target.closest("a");
+
+        if (!link) {
+            return;
+        }
+
+        const destino = link.href;
+
+        if (!destino) {
+            return;
+        }
+
+        try {
+            const url = new URL(destino);
+
+            if (url.origin === window.location.origin) {
+                navegandoDentroDoApp = true;
+            }
+
+        } catch (e) {
+        }
+
+    }, true);
+
+    /*
+     * Se a página estiver sendo descarregada sem uma
+     * navegação interna iniciada pelo usuário, consideramos
+     * que o aplicativo foi fechado.
+     */
+    window.addEventListener("pagehide", function (evento) {
+
+        if (evento.persisted) {
+            return;
+        }
+
+        if (navegandoDentroDoApp) {
+            return;
+        }
+
+        navigator.sendBeacon(
+            "/encerrar-sessao",
+            new Blob([], { type: "application/json" })
+        );
+
+    });
+
+})();
+</script>
+
 </body>
 
 </html>
