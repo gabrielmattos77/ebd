@@ -1,6 +1,3 @@
-import os
-from dotenv import load_dotenv
-
 from flask import Flask, render_template, request, redirect, url_for, send_file, session
 from datetime import datetime
 from functools import wraps
@@ -31,15 +28,12 @@ from banco import (
     obter_ofertas_mes,
     obter_resumo_mes_por_classe,
     obter_estatisticas_mes_por_classe,
-    obter_estatisticas_trimestre_por_classe,
-    obter_dashboard
+    obter_estatisticas_trimestre_por_classe
     )
 
 app = Flask(__name__)
 
-load_dotenv()
-
-app.secret_key = os.getenv("EBD_SECRET_KEY")
+app.secret_key = "EBD_LOGIN_2026"
 app.config["SESSION_PERMANENT"] = False
 
 
@@ -57,7 +51,7 @@ def login():
     if request.method == "POST":
         senha = request.form.get("senha", "")
 
-        if senha == os.getenv("EBD_SENHA"):
+        if senha == "EBD2026":
             session.clear()
             session["logado"] = True
             return redirect(url_for("inicio"))
@@ -215,11 +209,11 @@ def restaurar():
 @app.route("/")
 @login_obrigatorio
 def inicio():
-
     classes = listar_classes()
     domingos = listar_domingos()
 
     tri = int(request.args.get("tri", "1"))
+
     ano = int(request.args.get("ano", 2026))
 
     estatisticas_classes = obter_estatisticas_trimestre_por_classe(
@@ -227,63 +221,31 @@ def inicio():
         tri
     )
 
-    # =====================================================
-    # DASHBOARD — ÚLTIMO DOMINGO REGISTRADO
-    # =====================================================
+    domingos_por_mes = {}
 
-    dashboard = {
-        "alunos": 0,
-        "presentes": 0,
-        "ausentes": 0,
-        "visitantes": 0,
-        "biblias": 0,
-        "revistas": 0,
-        "oferta": 0
-    }
+    for id_domingo, data, sem_aula in domingos:
+        ano = data[0:4]
+        mes = data[5:7]
 
-    ultimo_domingo = None
+        chave_mes = f"{ano}-{mes}"
 
-    for domingo_id, data, sem_aula in reversed(domingos):
+        if chave_mes not in domingos_por_mes:
+            domingos_por_mes[chave_mes] = []
 
-        if sem_aula:
-            continue
+        domingos_por_mes[chave_mes].append(
+            (id_domingo, data)
+        )
 
-        registros_encontrados = False
-
-        for classe_id, nome_classe in classes:
-
-            registro = obter_registro_classe(
-                domingo_id,
-                classe_id
-            )
-
-            if any(registro.values()):
-                registros_encontrados = True
-
-                dashboard["alunos"] += registro["matriculados"] or 0
-                dashboard["presentes"] += registro["presentes"] or 0
-                dashboard["ausentes"] += registro["ausentes"] or 0
-                dashboard["visitantes"] += registro["visitantes"] or 0
-                dashboard["biblias"] += registro["biblias"] or 0
-                dashboard["revistas"] += registro["revistas"] or 0
-                dashboard["oferta"] += registro["oferta"] or 0
-
-        if registros_encontrados:
-            ultimo_domingo = data
-            break
 
     return render_template(
         "index.html",
         classes=classes,
         domingos=domingos,
         tri=tri,
-        estatisticas_classes=estatisticas_classes,
-        dashboard=dashboard,
-        ultimo_domingo=ultimo_domingo
+        estatisticas_classes=estatisticas_classes
     )
 
 @app.route("/chamada/resetar", methods=["POST"])
-@login_obrigatorio
 def resetar_chamada_rota():
 
     domingo_id = request.form.get("domingo_id")
@@ -305,7 +267,6 @@ def resetar_chamada_rota():
     )
 
 @app.route("/domingo/sem-aula", methods=["POST"])
-@login_obrigatorio
 def domingo_sem_aula():
 
     domingo_id = request.form.get("domingo_id")

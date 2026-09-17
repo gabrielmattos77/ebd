@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Controle da EBD</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #f7ebd7;
+            color: #714f34;
+        }
+
+        .login {
+            width: min(380px, calc(100% - 32px));
+            padding: 35px;
+            background: #ffffff;
+            border: 1px solid #ffffff;
+            border-radius: 22px;
+            box-shadow: 0 15px 35px rgba(80, 55, 35, .14);
+            text-align: center;
+        }
+
+       .logo-login {
+            font-size: 42px;
+            margin-bottom: 10px;
+        } 
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            color: #714f34;
+        }
+
+        p {
+            color: #8a6245;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #8a6245;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 14px;
+            border: 0;
+            border-radius: 10px;
+            background: #714f34;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5b3f29;
+        }
+
+        .erro {
+            margin-top: 15px;
+            color: #b33a3a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login">
+
+    <div class="logo-login">📖</div>
+
+    <h1>EBD</h1>
+
+    <p>Controle da Escola Bíblica Dominical</p>
+
+    <form method="POST">
+        <input
+            type="password"
+            name="senha"
+            placeholder="Senha"
+            autocomplete="current-password"
+            autofocus
+            required
+        >
+
+        <button type="submit">
+            Entrar
+        </button>
+    </form>
+
+    {% if erro %}
+        <div class="erro">{{ erro }}</div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

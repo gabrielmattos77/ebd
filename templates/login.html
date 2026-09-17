@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — EBD</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #f7ead5;
+            color: #714f34;
+        }
+
+        .login {
+            width: 410px;
+            max-width: calc(100% - 32px);
+            padding: 40px 35px 34px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(80, 55, 35, 0.14);
+            text-align: center;
+        }
+
+        .logo-login {
+            font-size: 42px;
+            line-height: 1;
+            margin-bottom: 14px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 36px;
+            font-weight: 700;
+            color: #714f34;
+        }
+
+        .subtitulo {
+            margin: 0 0 27px;
+            color: #8a6245;
+            font-size: 16px;
+        }
+
+        .campo {
+            text-align: left;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #714f34;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            padding: 12px;
+            border: 1px solid #8a6245;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            color: #5b4331;
+        }
+
+        input::placeholder {
+            color: #777777;
+        }
+
+        input:focus {
+            border-color: #714f34;
+        }
+
+        button {
+            width: 100%;
+            height: 46px;
+            margin-top: 18px;
+            border: 0;
+            border-radius: 10px;
+            background: #714f34;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5b3f29;
+        }
+
+        .erro {
+            margin-top: 15px;
+            color: #b33a3a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login">
+
+    <div class="logo-login">📖</div>
+
+    <h1>EBD</h1>
+
+    <p class="subtitulo">Controle da Escola Bíblica Dominical</p>
+
+    <form method="POST">
+
+        <div class="campo">
+            <label for="senha">Senha</label>
+
+            <input
+                id="senha"
+                type="password"
+                name="senha"
+                placeholder="Digite sua senha."
+                autocomplete="current-password"
+                autofocus
+                required
+            >
+        </div>
+
+        <button type="submit">
+            Entrar
+        </button>
+
+    </form>
+
+    {% if erro %}
+        <div class="erro">{{ erro }}</div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

@@ -24,3 +24,4 @@ banco_backup_*
 chamada_backup_*
 backups/
 .nfs*
+.env

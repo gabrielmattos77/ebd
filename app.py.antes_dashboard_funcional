@@ -220,7 +220,7 @@ def inicio():
     domingos = listar_domingos()
 
     tri = int(request.args.get("tri", "1"))
-    ano = int(request.args.get("ano", 2026))
+    ano = int(request.args.get("ano", "2026"))
 
     estatisticas_classes = obter_estatisticas_trimestre_por_classe(
         ano,
@@ -228,9 +228,10 @@ def inicio():
     )
 
     # =====================================================
-    # DASHBOARD — ÚLTIMO DOMINGO REGISTRADO
+    # DASHBOARD — ÚLTIMO DOMINGO COM REGISTRO
     # =====================================================
 
+    ultimo_domingo = None
     dashboard = {
         "alunos": 0,
         "presentes": 0,
@@ -241,14 +242,9 @@ def inicio():
         "oferta": 0
     }
 
-    ultimo_domingo = None
-
     for domingo_id, data, sem_aula in reversed(domingos):
 
-        if sem_aula:
-            continue
-
-        registros_encontrados = False
+        encontrou_registro = False
 
         for classe_id, nome_classe in classes:
 
@@ -258,7 +254,8 @@ def inicio():
             )
 
             if any(registro.values()):
-                registros_encontrados = True
+
+                encontrou_registro = True
 
                 dashboard["alunos"] += registro["matriculados"] or 0
                 dashboard["presentes"] += registro["presentes"] or 0
@@ -268,7 +265,7 @@ def inicio():
                 dashboard["revistas"] += registro["revistas"] or 0
                 dashboard["oferta"] += registro["oferta"] or 0
 
-        if registros_encontrados:
+        if encontrou_registro:
             ultimo_domingo = data
             break
 

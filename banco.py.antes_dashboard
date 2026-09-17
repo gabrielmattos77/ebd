@@ -1,6 +1,6 @@
 import sqlite3
 
-BANCO = "/home/gabrielmattos77/ebd/ebd.db"
+BANCO = "ebd.db"
 
 
 def conectar():
@@ -1214,101 +1214,4 @@ def obter_estatisticas_trimestre_por_classe(ano, tri):
 
     return resultado
 
-def obter_dashboard():
-    conexao = conectar()
-    cursor = conexao.cursor()
 
-    # Último domingo cadastrado
-    cursor.execute("""
-        SELECT id, data, sem_aula
-        FROM domingos
-        ORDER BY data DESC
-        LIMIT 1
-    """)
-
-    domingo = cursor.fetchone()
-
-    if domingo is None:
-        conexao.close()
-
-        return {
-            "data": None,
-            "alunos": 0,
-            "presentes": 0,
-            "ausentes": 0,
-            "visitantes": 0,
-            "biblias": 0,
-            "revistas": 0,
-            "ofertas": 0,
-            "domingos": 0,
-            "classes": []
-        }
-
-    domingo_id, data_domingo, sem_aula = domingo
-
-    # Quantidade de domingos cadastrados
-    cursor.execute("""
-        SELECT COUNT(*)
-        FROM domingos
-    """)
-
-    total_domingos = cursor.fetchone()[0] or 0
-
-    # Resumo geral do último domingo
-    cursor.execute("""
-        SELECT
-            COALESCE(SUM(matriculados), 0),
-            COALESCE(SUM(presentes), 0),
-            COALESCE(SUM(ausentes), 0),
-            COALESCE(SUM(visitantes), 0),
-            COALESCE(SUM(biblias), 0),
-            COALESCE(SUM(revistas), 0),
-            COALESCE(SUM(oferta), 0)
-        FROM registros_classe
-        WHERE domingo_id = ?
-    """, (domingo_id,))
-
-    resumo = cursor.fetchone()
-
-    # Dados por classe
-    cursor.execute("""
-        SELECT
-            classes.id,
-            classes.nome,
-            COALESCE(registros_classe.matriculados, 0),
-            COALESCE(registros_classe.presentes, 0),
-            COALESCE(registros_classe.ausentes, 0),
-            COALESCE(registros_classe.visitantes, 0)
-        FROM classes
-        LEFT JOIN registros_classe
-            ON registros_classe.classe_id = classes.id
-            AND registros_classe.domingo_id = ?
-        ORDER BY classes.id
-    """, (domingo_id,))
-
-    classes = []
-
-    for registro in cursor.fetchall():
-        classes.append({
-            "id": registro[0],
-            "nome": registro[1],
-            "matriculados": registro[2],
-            "presentes": registro[3],
-            "ausentes": registro[4],
-            "visitantes": registro[5]
-        })
-
-    conexao.close()
-
-    return {
-        "data": data_domingo,
-        "alunos": resumo[0],
-        "presentes": resumo[1],
-        "ausentes": resumo[2],
-        "visitantes": resumo[3],
-        "biblias": resumo[4],
-        "revistas": resumo[5],
-        "ofertas": resumo[6],
-        "domingos": total_domingos,
-        "classes": classes
-    }

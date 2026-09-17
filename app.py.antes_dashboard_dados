@@ -215,11 +215,11 @@ def restaurar():
 @app.route("/")
 @login_obrigatorio
 def inicio():
-
     classes = listar_classes()
     domingos = listar_domingos()
-
+    dashboard = obter_dashboard()
     tri = int(request.args.get("tri", "1"))
+
     ano = int(request.args.get("ano", 2026))
 
     estatisticas_classes = obter_estatisticas_trimestre_por_classe(
@@ -227,50 +227,21 @@ def inicio():
         tri
     )
 
-    # =====================================================
-    # DASHBOARD — ÚLTIMO DOMINGO REGISTRADO
-    # =====================================================
+    domingos_por_mes = {}
 
-    dashboard = {
-        "alunos": 0,
-        "presentes": 0,
-        "ausentes": 0,
-        "visitantes": 0,
-        "biblias": 0,
-        "revistas": 0,
-        "oferta": 0
-    }
+    for id_domingo, data, sem_aula in domingos:
+        ano = data[0:4]
+        mes = data[5:7]
 
-    ultimo_domingo = None
+        chave_mes = f"{ano}-{mes}"
 
-    for domingo_id, data, sem_aula in reversed(domingos):
+        if chave_mes not in domingos_por_mes:
+            domingos_por_mes[chave_mes] = []
 
-        if sem_aula:
-            continue
+        domingos_por_mes[chave_mes].append(
+            (id_domingo, data)
+        )
 
-        registros_encontrados = False
-
-        for classe_id, nome_classe in classes:
-
-            registro = obter_registro_classe(
-                domingo_id,
-                classe_id
-            )
-
-            if any(registro.values()):
-                registros_encontrados = True
-
-                dashboard["alunos"] += registro["matriculados"] or 0
-                dashboard["presentes"] += registro["presentes"] or 0
-                dashboard["ausentes"] += registro["ausentes"] or 0
-                dashboard["visitantes"] += registro["visitantes"] or 0
-                dashboard["biblias"] += registro["biblias"] or 0
-                dashboard["revistas"] += registro["revistas"] or 0
-                dashboard["oferta"] += registro["oferta"] or 0
-
-        if registros_encontrados:
-            ultimo_domingo = data
-            break
 
     return render_template(
         "index.html",
@@ -278,9 +249,8 @@ def inicio():
         domingos=domingos,
         tri=tri,
         estatisticas_classes=estatisticas_classes,
-        dashboard=dashboard,
-        ultimo_domingo=ultimo_domingo
-    )
+        dashboard=dashboard
+        )
 
 @app.route("/chamada/resetar", methods=["POST"])
 @login_obrigatorio
