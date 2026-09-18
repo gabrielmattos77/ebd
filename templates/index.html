@@ -506,49 +506,6 @@ header h1 {
 }
 
 /* Bíblia aberta no canto superior direito */
-.biblia-aberta {
-    position: absolute;
-    z-index: 10;
-    top: 25px;
-    right: 38px;
-    width: 82px;
-    height: 58px;
-    transform: rotate(-3deg);
-}
-
-.biblia-aberta .pagina {
-    position: absolute;
-    top: 5px;
-    width: 39px;
-    height: 49px;
-    background: #fffdf5;
-    border: 2px solid #806044;
-    box-shadow: 0 3px 5px rgba(80,55,35,.18);
-}
-
-.biblia-aberta .pagina-esquerda {
-    left: 1px;
-    border-radius: 8px 2px 3px 10px;
-    transform: skewY(7deg);
-}
-
-.biblia-aberta .pagina-direita {
-    right: 1px;
-    border-radius: 2px 8px 10px 3px;
-    transform: skewY(-7deg);
-}
-
-.biblia-aberta .lombada {
-    position: absolute;
-    z-index: 3;
-    left: 39px;
-    top: 6px;
-    width: 5px;
-    height: 48px;
-    background: #806044;
-    border-radius: 50%;
-}
-
 /* Rodapé */
 .rodape-igreja {
     width: 100%;
@@ -574,14 +531,7 @@ header h1 {
         padding-left: 20px;
     }
 
-    .biblia-aberta {
-        top: 18px;
-        right: 15px;
-        transform: scale(.75) rotate(-3deg);
-        transform-origin: top right;
-    }
-
-    .rodape-igreja {
+.rodape-igreja {
         font-size: 11px;
     }
 }
@@ -633,70 +583,10 @@ header h1 {
    BÍBLIA ABERTA
    ========================================================= */
 
-.biblia-aberta {
-    position: absolute;
-    z-index: 15;
-    top: 18px;
-    right: 45px;
-    width: 105px;
-    height: 75px;
-    transform: rotate(-2deg);
-}
-
 /* páginas */
-.biblia-aberta .pagina {
-    position: absolute;
-    top: 3px;
-    width: 50px;
-    height: 63px;
-
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            transparent 0px,
-            transparent 6px,
-            rgba(100,75,50,.16) 7px,
-            transparent 8px
-        ),
-        #fffdf5;
-
-    border: 2px solid #795536;
-    box-shadow:
-        0 5px 8px rgba(70,45,25,.22);
-}
-
 /* página esquerda */
-.biblia-aberta .pagina-esquerda {
-    left: 2px;
-    border-radius: 7px 2px 4px 13px;
-    transform: skewY(5deg);
-}
-
 /* página direita */
-.biblia-aberta .pagina-direita {
-    right: 2px;
-    border-radius: 2px 7px 13px 4px;
-    transform: skewY(-5deg);
-}
-
 /* lombada */
-.biblia-aberta .lombada {
-    position: absolute;
-    z-index: 20;
-    left: 50px;
-    top: 4px;
-    width: 6px;
-    height: 62px;
-    background: linear-gradient(
-        90deg,
-        #6d4728,
-        #b27a39,
-        #6d4728
-    );
-    border-radius: 50%;
-    box-shadow: 0 2px 3px rgba(60,40,20,.25);
-}
-
 /* =========================================================
    RODAPÉ
    ========================================================= */
@@ -738,14 +628,7 @@ header h1 {
         padding-right: 75px;
     }
 
-    .biblia-aberta {
-        top: 15px;
-        right: 12px;
-        transform: scale(.72) rotate(-2deg);
-        transform-origin: top right;
-    }
-
-    .rodape-igreja {
+.rodape-igreja {
         font-size: 13px;
     }
 }
@@ -1232,53 +1115,9 @@ header::before {
 
 /* mantém o conteúdo acima da textura */
 header h1,
-header .biblia-aberta {
-    z-index: 10;
-}
-
-
-
 /* =========================================================
    BÍBLIA REAL — IMAGEM DO CABEÇALHO
    ========================================================= */
-
-header .biblia-aberta {
-    position: absolute;
-    z-index: 15;
-
-    top: 8px;
-    right: 28px;
-
-    width: 145px;
-    height: 95px;
-
-    margin: 0;
-    padding: 0;
-
-    background: none;
-    border: none;
-    box-shadow: none;
-
-    transform: none;
-}
-
-header .biblia-aberta img {
-    display: block;
-
-    width: 100%;
-    height: 100%;
-
-    object-fit: cover;
-    background: transparent !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-
-    border: none;
-    border-radius: 4px;
-
-    box-shadow:
-        0 5px 10px rgba(55,35,20,.28);
-}
 
 /* AJUSTE — BEGE RETRÔ MAIS CLARO */
 header {
@@ -1419,14 +1258,7 @@ header {
         padding: 0 65px 0 10px !important;
     }
 
-    header .biblia-aberta {
-        top: 8px !important;
-        right: 10px !important;
-        width: 105px !important;
-        height: 70px !important;
-    }
-
-    .navegacao {
+.navegacao {
         top: 105px !important;
         width: 300px !important;
         max-width: calc(100% - 24px) !important;
@@ -1466,11 +1298,6 @@ header {
 <body>
 
 <header>
-
-    <div class="biblia-aberta">
-        <img src="{{ url_for('static', filename='icons/biblia-aberta.png') }}"
-             alt="Bíblia aberta">
-    </div>
 
     <h1>Controle da EBD</h1>
 
@@ -1953,3 +1780,40 @@ header {
 </style>
 
 
+
+<style id="teste-performance-mobile">
+@media (max-width: 700px) {
+
+    header,
+    .rodape-igreja,
+    .dashboard,
+    .dashboard-card,
+    .nav-btn {
+        box-shadow: none !important;
+    }
+
+    header,
+    .rodape-igreja {
+        background-image: none !important;
+    }
+
+    header::before,
+    header::after,
+    .rodape-igreja::before,
+    .rodape-igreja::after {
+        display: none !important;
+    }
+}
+</style>
+
+<style id="remover-faixa-clara-cabecalho">
+/* Remove qualquer faixa/fundo sobre o título */
+header h1,
+header h1.titulo-arco {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+</style>
