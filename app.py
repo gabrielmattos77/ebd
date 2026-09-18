@@ -32,7 +32,8 @@ from banco import (
     obter_resumo_mes_por_classe,
     obter_estatisticas_mes_por_classe,
     obter_estatisticas_trimestre_por_classe,
-    obter_dashboard
+    obter_dashboard,
+    obter_registros_classes_dashboard
     )
 
 app = Flask(__name__)
@@ -243,6 +244,9 @@ def inicio():
 
     ultimo_domingo = None
 
+    # Busca todos os registros do dashboard em uma única consulta.
+    registros_dashboard = obter_registros_classes_dashboard()
+
     for domingo_id, data, sem_aula in reversed(domingos):
 
         if sem_aula:
@@ -252,9 +256,18 @@ def inicio():
 
         for classe_id, nome_classe in classes:
 
-            registro = obter_registro_classe(
-                domingo_id,
-                classe_id
+            registro = registros_dashboard.get(
+                (domingo_id, classe_id),
+                {
+                    "biblias": 0,
+                    "revistas": 0,
+                    "oferta": 0,
+                    "matriculados": 0,
+                    "presentes": 0,
+                    "ausentes": 0,
+                    "visitantes": 0,
+                    "assistencias": 0
+                }
             )
 
             if any(registro.values()):

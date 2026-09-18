@@ -959,6 +959,50 @@ def obter_registro_classe(domingo_id, classe_id):
         "assistencias": resultado[7]
     }
 
+
+def obter_registros_classes_dashboard():
+    """
+    Busca todos os registros de classes em uma única consulta.
+    Retorna os dados indexados por (domingo_id, classe_id).
+    """
+
+    conexao = conectar()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT
+            domingo_id,
+            classe_id,
+            biblias,
+            revistas,
+            oferta,
+            matriculados,
+            presentes,
+            ausentes,
+            visitantes,
+            assistencias
+        FROM registros_classe
+    """)
+
+    registros = {}
+
+    for resultado in cursor.fetchall():
+        registros[(resultado[0], resultado[1])] = {
+            "biblias": resultado[2],
+            "revistas": resultado[3],
+            "oferta": resultado[4],
+            "matriculados": resultado[5],
+            "presentes": resultado[6],
+            "ausentes": resultado[7],
+            "visitantes": resultado[8],
+            "assistencias": resultado[9]
+        }
+
+    conexao.close()
+
+    return registros
+
+
 def obter_ofertas_mes(ano, mes):
     conexao = conectar()
     cursor = conexao.cursor()
